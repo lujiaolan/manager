@@ -1,0 +1,100 @@
+.login-wrap{
+    position: relative;
+    width:100%;
+    height:100%;
+}
+.ms-login{
+    position: absolute;
+    left:50%;
+    top: 40%;
+    width: 420px;
+    height: 391px;
+    margin:-150px 0 0 -190px;
+    padding:40px;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 0 10px 2px #f3f3f3;
+    border: 1px solid #f3f3f3;
+    box-sizing: border-box;
+}
+.ms-title {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.ms-logo {
+    float: left;
+    width: 200px;
+    height: 72px;
+    background: url("../img/logo.png") no-repeat;
+    background-size: 100%;
+}
+.ms-title .el-select {
+    width: 100px;
+    float: left;
+    margin-left: 10px;
+    margin-top: 16px;
+}
+.login-btn{
+    text-align: center;
+}
+.login-btn button{
+    width:100%;
+    height:36px;
+    margin-bottom: 10px;
+}
+.forget-pwd {
+    float: right;
+}
+.login-check{
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+.login-check .el-button{
+    margin-left: 170px;
+}
+.lang-wrap {
+    float: right;
+    margin-top: 16px;
+}
+.lang-wrap > .el-dropdown > .el-button{
+    width: 100px;
+    height: 37px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+.lang-wrap .el-button--primary:focus,
+.lang-wrap .el-button--primary:hover,
+.lang-wrap .el-button--primary {
+    background-color: #fff;
+    color: #ccc;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+.lang-wrap .el-button--primary img {
+    display: block;
+    float: left;
+    margin-left: 20px;
+    margin-right: 8px;
+}
+.el-dropdown-menu.lang-choice {
+    min-width: 95px;
+}
+.el-dropdown-menu.lang-choice {
+    min-width: 95px;
+}
+.lang-choice .el-dropdown-menu__item {
+    line-height: 18px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.lang-choice .el-dropdown-menu__item img {
+    display: block;
+    float: left;
+    margin: 2px 8px 0 8px;
+}
+.lang-choice .el-dropdown-menu__item a,
+.lang-choice .el-dropdown-menu__item a:hover,
+.lang-choice .el-dropdown-menu__item a:visited {
+    color: #ccc;
+}

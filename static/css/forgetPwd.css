@@ -1,0 +1,292 @@
+html body{
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',
+    Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',SimSun-ExtB,sans-serif;
+    font-size: 14px;
+}
+.wrap,
+.lo-container {
+    margin: auto;
+    overflow: hidden;
+}
+.wrap {
+    width:1200px;
+}
+.lo-container {
+    width: 480px;
+    margin-top: 70px;
+}
+.lo-container > div:nth-child(1) {
+    overflow: hidden;
+}
+.logo-wrap {
+    float: left;
+    width: 197px;
+    height: 69px;
+}
+.logo-wrap > img {
+    height: 100%;
+}
+.lang-wrap {
+    float: right;
+    margin-top: 16px;
+}
+.lang-wrap > .el-dropdown > .el-button{
+    width: 100px;
+    height: 37px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+.lang-wrap .el-button--primary:focus,
+.lang-wrap .el-button--primary:hover,
+.lang-wrap .el-button--primary {
+    background-color: #fff;
+    color: #ccc;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+.lang-wrap .el-button--primary img {
+    display: block;
+    float: left;
+    margin-left: 20px;
+    margin-right: 8px;
+}
+.el-dropdown-menu.lang-choice {
+    min-width: 95px;
+}
+.lang-choice .el-dropdown-menu__item {
+    line-height: 18px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.lang-choice .el-dropdown-menu__item img {
+    display: block;
+    float: left;
+    margin: 2px 8px 0 8px;
+}
+.lang-choice .el-dropdown-menu__item a,
+.lang-choice .el-dropdown-menu__item a:hover,
+.lang-choice .el-dropdown-menu__item a:visited {
+    color: #ccc;
+}
+
+.loginTab {
+    width: 470px;
+    margin-top: 25px;
+    padding: 20px 40px;
+    box-shadow: 0 0 10px 2px #f3f3f3;
+    border: 1px solid #f3f3f3;
+    box-sizing: border-box;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+.loginTab .fg-login {
+    clear: both;
+    margin-top: 30px;
+}
+.loginTab.el-tabs .el-tabs__nav {
+    width: 100%;
+}
+.loginTab.el-tabs .el-tabs__active-bar {
+    width: 50%!important;
+}
+.loginTab.el-tabs .el-tabs__item {
+    width: 50%;
+    text-align: center;
+    color: #999;
+}
+/*忘记密码的tab*/
+.forgetTab.el-tabs .el-tabs__active-bar {
+    width: 100%!important;
+}
+.forgetTab.el-tabs .el-tabs__item {
+    width: 100%;
+}
+.forgetTab .fg-login {
+    margin-top: 25px;
+}
+/*忘记密码的tab*/
+.loginTab.el-tabs .el-tabs__item.is-active {
+    color: #3384d2;
+}
+.loginTab.el-tabs .el-tabs__active-bar {
+    background-color: #3384d2;
+}
+.loginTab .el-form .el-input__inner {
+    height: 48px;
+    border: 1px solid #c3c3c3;
+    color: #666;
+}
+.loginTab .real-account > .el-form .el-input__inner {
+    padding-left: 70px;
+}
+.loginTab .el-form .el-input > ::-webkit-input-placeholder {
+    color: #c3c3c3;
+}
+.loginTab .el-form .el-checkbox__label {
+    color: #999;
+}
+.loginTab.el-tabs .confirm {
+    padding: 0 20px;
+}
+.loginTab .confirm .lo-forget {
+    color: #3384d2;
+    font-size: 14px;
+}
+.loginTab .confirm .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: #3384d2;
+    border-color: #3384d2;
+}
+.loginTab .confirm .el-checkbox__inner:hover {
+    border-color: #3384d2;
+}
+.loginTab .confirm .el-checkbox__label a {
+    color: #3384d2;
+    font-size: 12px;
+}
+.loginTab .real-account .confirm .el-checkbox__inner::after {
+    height: 6px;
+    left: 3px;
+}
+.loginTab .real-account .confirm .el-checkbox+.el-checkbox {
+    margin-left: 9px;
+}
+.loginTab .real-account .confirm .el-checkbox__inner {
+    height: 14px;
+    width: 14px;
+}
+.loginTab .lo-forget {
+    float: right;
+}
+.loginTab .el-button:focus,
+.loginTab .el-button:hover,
+.loginTab .lo-submit,
+.loginTab .mt4register,
+.loginTab .realRegister {
+    width: 100%;
+    background-color: #3384d2;
+    border-color: #3384d2;
+    height: 48px;
+    color: #fff;
+}
+.loginTab .mt4register {
+    margin-top: 40px;
+}
+.loginTab .login-btn {
+    margin-top: 24px;
+}
+.loginTab .login-btn.colorGray {
+    margin-bottom: 20px;
+}
+.loginTab .login-btn.colorGray .lo-submit {
+    background-color: #c0c5c9;
+    border-color: #c0c5c9;
+}
+.loginTab .login-btn.marginTop40 {
+    margin-top: 40px;
+}
+.loginTab .realRegister {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.loginTab .el-form .el-form-item__content {
+    line-height: 11px;
+}
+.loginTab .el-form .el-form-item {
+    margin-bottom: 24px;
+}
+.line {
+    position:relative;
+    width:100%;
+    text-align:center;
+    line-height: 20px;
+    margin-top: 24px;
+    margin-bottom: 30px;
+}
+.line:before,
+.line:after {
+    content:"";
+    width:42%;
+    height:1px;
+    background-color:#c3c3c3;
+    position:absolute;
+    bottom:50%;
+}
+.line:before {
+    left: 0;
+}
+.line:after {
+    right:0;
+}
+.line span {
+    color: #999;
+}
+.user-register {
+    text-align: center;
+    margin: auto;
+}
+.user-register a {
+    color: #3384d2;
+}
+.fg-login .idcode.el-button:focus,
+.fg-login .idcode.el-button:hover,
+.realContent .idcode.el-button:focus,
+.realContent .idcode.el-button:hover {
+    width: 100px;
+    background-color: #fff;
+    color: #3384d2;
+    top: 7px;
+    height: 34px;
+}
+.fg-login .idcode,
+.realContent .idcode {
+    position: absolute;
+    right: 2%;
+    top: 7px;
+    background-color: rgba(0,0,0,0);
+    background-color: #fff;
+    border-radius: 8px;
+    border: none;
+    color: #3384d2;
+}
+.fg-login .idcodeTip {
+    font-size: 14px;
+    color: #ff3a3a;
+    height: 24px;
+    line-height: 24px;
+    margin-top: 8px;
+}
+.fg-login .idcodeTip > i {
+    float: left;
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    /*background: url("../img/notice.png") no-repeat 100%;*/
+}
+
+.fg-login .el-button.is-disabled,
+.realContent .el-button.is-disabled,
+.fg-login .el-button.is-disabled:focus,
+.realContent .el-button.is-disabled:focus,
+.fg-login .el-button.is-disabled:hover,
+.realContent .el-button.is-disabled:hover {
+    color: #000;
+}
+.loginTab .back-login {
+    float: right;
+    color: #999;
+    font-size: 14px;
+    margin-top: -4px;
+}
+.loginTab .label-point {
+    position: absolute;
+    color: #666;
+    display: inline-block;
+    top: 17px;
+    left: 10px;
+    z-index: 1;
+}

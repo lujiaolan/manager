@@ -1,0 +1,449 @@
+*{margin:0;padding:0;}
+html,body,#app,.wrapper{
+    width:100%;
+    height:100%;
+    overflow: hidden;
+}
+body{
+    font-family:"Helvetica Neue",Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
+}
+a{text-decoration: none}
+.content{
+    background: none repeat scroll 0 0 rgb(239,239,244);
+    position: absolute;
+    left: 250px;
+    right: 0;
+    top: 70px;
+    bottom:0;
+    width: auto;
+    padding:17px 40px 0;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+.crumbs{
+    margin-bottom: 20px;
+}
+.pagination{
+    margin: 20px 0;
+    text-align: right;
+}
+.plugins-tips{
+    padding:20px 10px;
+    margin-bottom: 20px;
+}
+.el-button+.el-tooltip {
+    margin-left: 10px;
+}
+
+.el-table tr:hover{
+    background: #f6faff;
+}
+.mgb20{
+    margin-bottom: 20px;
+}
+
+.move-enter-active,.move-leave-active{
+    transition: opacity .5s;
+}
+.move-enter,.move-leave{
+    opacity: 0;
+}
+/*BaseForm*/
+.form-box{
+    width:600px;
+}
+.form-box .line{
+    text-align: center;
+}
+.el-time-panel__content::after, .el-time-panel__content::before {
+    margin-top: -7px;
+}
+/*Readme*/
+.ms-doc .el-checkbox__input.is-disabled+.el-checkbox__label{
+    color: #333;
+    cursor: pointer;
+}
+/*Upload*/
+.pure-button{
+    width:150px;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    border-radius: 3px;
+}
+.g-core-image-corp-container .info-aside{
+    height:45px;
+}
+.el-upload--text {
+    background-color: #fff;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 360px;
+    height: 180px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.el-upload--text .el-icon-upload {
+    font-size: 67px;
+    color: #97a8be;
+    margin: 40px 0 16px;
+    line-height: 50px;
+}
+.el-upload--text {
+    color: #97a8be;
+    font-size: 14px;
+    text-align: center;
+}
+.el-upload--text em {
+    font-style: normal;
+}
+/*VueEditor*/
+.ql-container{
+    min-height: 400px;
+}
+.ql-snow .ql-tooltip{
+    transform: translateX(117.5px) translateY(10px) !important;
+}
+.editor-btn{
+    margin-top: 20px;
+}
+
+/*首页home start*/
+.box-card {
+    float: left;
+    margin-top: 30px;
+    box-sizing: border-box;
+}
+.box-card .el-card__body {
+    padding-bottom: 0;
+}
+.card-title {
+    margin-bottom: 20px;
+}
+.box-card .el-date-editor {
+    float: right;
+}
+.card-info {
+    overflow: hidden;
+    margin: 18px;
+}
+.card-info > div {
+    float: left;
+    text-align: center;
+    line-height: 30px;
+    padding: 10px 0;
+}
+.box-card .card-info.no-border {
+    border: none;
+}
+.box-card .card-info.whiteColor p {
+    color: #fff;
+}
+/*.home-content .box-card:nth-child(2) .card-info {*/
+    /*padding: 20px 0;*/
+/*}*/
+
+#schart > div {
+    float: left;
+    padding-bottom: 20px;
+}
+
+#schart > div:nth-child(1) {
+    margin-right: 10%;
+}
+
+.card-info .card-info-img {
+    width: 82%;
+    padding: 41% 0;
+    background: url("../img/img.jpg");
+    background-size: 100%;
+    margin: 0 auto 19px;
+}
+.news-info {
+    width: 100%;
+}
+.news-info > p {
+    float: left;
+    display: block;
+    width: 65%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /*text-overflow: clip;*/
+}
+.news-date {
+    display: block;
+    float: right;
+    width: 30%;
+}
+/*首页home end*/
+
+/*CrmAgent start*/
+.handle-box{
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.handle-select{
+    width: 150px;
+}
+.crmAgent .handle-input{
+    width: 150px;
+    display: inline-block;
+}
+.crmAgent .el-date-editor.el-input {
+    width: 150px;
+}
+.crmAgent .el-form-item {
+    float: left;
+}
+.crmAgent .dateData {
+    cursor: pointer;
+    color: rgb(72, 106, 106);
+    margin-right: 12px;
+}
+.crmAgent .dateData.isActive {
+    color: #000;
+    font-weight: bolder;
+}
+.editBank.el-table .cell {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+}
+.editBank .el-input__inner {
+    border: 1px red solid;
+    padding: 0;
+    height: 42px;
+    text-align: center;
+    width: 90%;
+}
+.editBank .el-upload {
+    display: block;
+}
+.editBank .el-upload--text {
+    width: 100%;
+    height: auto;
+}
+.editBank .el-upload-dragger,
+.editBank .noEditImg {
+    width: 120px;
+    height: 90px;
+    margin: 15px auto;
+    overflow: hidden;
+    border-radius: 0;
+    border: none;
+}
+.editBank .noEditImg > img,
+.editBank .el-upload-dragger > img {
+    width: 100%;
+}
+.agentList.el-table .cell,
+.agentList.el-table th>div {
+    padding: 0;
+}
+/*动画*/
+.el-message-box.bigImg {
+    width: 600px;
+    background: none;
+}
+.el-message-box.bigImg .el-message-box__btns,
+.el-message-box.bigImg .el-message-box__content {
+    padding: 0;
+}
+
+.baseImg {
+    width: 50%;
+}
+.baseImg > img {
+    width: 100%;
+}
+.commissionSet.el-form .el-form-item__content {
+    text-align: left;
+}
+.varietyName {
+    display: inline-block;
+    height: 30px;
+    font-size: 14px;
+    color: #000;
+    margin-left: 68px;
+}
+.varietyName > span {
+    display: inline-block;
+    width: 76px;
+}
+.typeInfo,
+.typeInfo__inner,
+.typeInfo__input {
+    position: relative;
+    display: inline-block;
+}
+.typeInfo {
+    font-size: 14px;
+    color: rgb(31, 61, 60);
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: 16px;
+}
+.typeInfo+.typeInfo {
+    margin-left: 15px;
+}
+.typeInfo__input {
+    white-space: nowrap;
+    cursor: pointer;
+    outline: 0;
+    line-height: 1;
+    vertical-align: middle;
+}
+.typeInfo__inner {
+    border: 1px solid rgb(191, 217, 216);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.typeInfo__inner::after {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #fff;
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -ms-transform: translate(-50%,-50%) scale(0);
+    transform: translate(-50%,-50%) scale(0);
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6);
+}
+.typeInfo__input.isChecked .typeInfo__inner {
+    border-color: #00d1b2;
+    background: #00d1b2;
+}
+.typeInfo__input.isChecked .typeInfo__inner::after {
+    -ms-transform: translate(-50%,-50%) scale(1);
+    transform: translate(-50%,-50%) scale(1);
+}
+.typeInfo__original {
+    opacity: 0;
+    outline: 0;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+}
+.typeInfo__label {
+    font-size: 14px;
+    padding-left: 5px;
+}
+.agentLeverStyle {
+    font-weight: bolder;
+    font-size: 18px;
+}
+/*CrmAgent end*/
+
+/*CommissionAudit start*/
+.comAudit.el-table .cell,
+.comAudit.el-table th>div {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+}
+.comAudit.el-table span.dateTime {
+    padding-left: 8px;
+}
+.rightPart {
+    float: right;
+    margin-top: 30px;
+}
+.rightPart > div {
+    float: left;
+    line-height: 30px;
+}
+.rightPart > .pagination {
+    float: right;
+}
+.commentStyle {
+    -webkit-line-clamp: 1; /*限制显示的文本的行数为3*/
+    -webkit-box-orient: vertical; /*水平排列<p>，使其不纵向显示*/
+    text-overflow: ellipsis; /*超出的文字部分用...来显示*/
+    display: -webkit-box; /*将<p>变成高度定死，宽度自适应的行内块元素*/
+}
+.leftPart {
+    float: left;
+    margin: 20px 0 20px 30px;
+}
+/*CommissionAudit end*/
+
+/*OutToCrmAudit start*/
+.outMoneyMarginR20.el-form > .el-form-item {
+    margin-right: 14px;
+}
+.outMoneyStyle > .el-dialog--small {
+    width: 400px;
+}
+.outMoneyStyle > .el-dialog--small .el-form {
+    overflow: hidden;
+}
+.outMoneyStyle > .el-dialog--small .el-form > .el-form-item {
+    width: 100%;
+    margin-bottom: 0;
+}
+/*OutToCrmAudit end*/
+/*MT4SET START*/
+.changeGroupFrom .el-form-item:nth-child(1) .el-input {
+    width: 40%;
+}
+/*MT4SET END*/
+
+/*emailInfo start*/
+.emailInfo.el-form {
+    margin-left: 62px;
+}
+.emailInfo.el-form > .el-form-item {
+
+}
+.emailInfo.el-form .el-form-item__content {
+    float: left;
+    width: 360px;
+}
+.emailInfo.el-form .el-form-item__label {
+    width: 100px;
+    text-align: right;
+}
+.emailInfo.el-form .el-button {
+    margin-left: 50%;
+}
+.emailInfo.el-form .el-upload__tip {
+    width: 360px;
+}
+.emailDetail > .el-dialog {
+    width: 640px;
+    height: 960px;
+    top: 0!important;
+}
+.emailDetail > .el-dialog iframe {
+    width:595px;
+    height: 850px;
+    border: none;
+}
+.uploadStyle {
+    width: 360px;
+    height: 180px;
+    border: 1px dashed #d9d9d9;
+    background: rgba(0,0,0,.2);
+}
+.uploadStyle > img {
+    margin: 52px 71px;
+    width: 217px;
+    height: 75px;
+}
+/*emailInfo end*/
+
+
