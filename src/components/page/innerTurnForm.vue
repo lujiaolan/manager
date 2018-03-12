@@ -25,5 +25,5 @@
     </el-form>
 </template>
 <script>
-    module.exports = require('../pageJS/innerTurnForm')
+    module.exports = require('../pageJS/InnerTurnForm')
 </script>

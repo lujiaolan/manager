@@ -26,19 +26,18 @@
                 this.$ajax({
                     method: 'post',
                     data:postData,
-                    url:'/ap/getApId'
+                    url:'/other/ap/getApId'
                 }).then(function (res) {
                     console.log(res)
                     console.log(res.data.data)
                     self.$store.dispatch('update_domain',res.data.data)
-
                 }).catch(function (err) {
                     console.log("getApId")
                     console.log(err)
                 })
             }
         },
-        created(){
+        mounted(){
             this.getApId();
         },
         watch:{

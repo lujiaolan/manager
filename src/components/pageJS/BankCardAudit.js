@@ -15,14 +15,51 @@ export default {
                 currentPage:1,
                 pageSize:10
             },
+            levelList:[
+                {
+                    label:"1:10",
+                    value:10
+                },
+                {
+                    label:'1:20',
+                    value:20
+                },
+                {
+                    label:'1:50',
+                    value:50
+                },
+                {
+                    label:'1:100',
+                    value:100
+                },
+                {
+                    label:'1:200',
+                    value:200
+                },
+                {
+                    label:'1:400',
+                    value:400
+                },
+                {
+                    label:'1:500',
+                    value:500
+                },
+                {
+                    label:'1:800',
+                    value:800
+                }],
             bankStatusList:[
                 {
                     label:'全部审核状态',
                     value:''
                 },
                 {
-                    label:'待审核',
+                    label:'未上传',
                     value:0
+                },
+                {
+                    label:'待审核',
+                    value:-1
                 },
                 {
                     label:'已审核',
@@ -44,6 +81,7 @@ export default {
         },
         bankAudit(index,row){
             const detail = JSON.stringify(row)
+            console.log(row)
             this.$router.push('/bankAuditDetail?bankDetail='+detail)
         },
         bankAuditSizeChange(val){
@@ -57,13 +95,18 @@ export default {
         bankCardSearch(){
             let bankStatus = [];
             if(this.BankCardAudit.bankCardStatus===''){
-                bankStatus = [0,1,2]
+                bankStatus = [-1,1,2,0]
             }else if(this.BankCardAudit.bankCardStatus===1){
                 bankStatus = [1]
             }else if(this.BankCardAudit.bankCardStatus===2) {
                 bankStatus = [2]
+            }else if(this.BankCardAudit.bankCardStatus===-1){
+                bankStatus = [-1]
             }else if(this.BankCardAudit.bankCardStatus===0){
                 bankStatus = [0]
+            }
+            else{
+                bankStatus = [-1,1,2,0]
             }
             const postData = {
                 apId:this.BankCardAudit.apId,
@@ -122,10 +165,11 @@ export default {
                                bankSort:item.bankCard.bankSort,
                                importantCard:item.bankCard.importantCard,
                                cardHolder:item.bankCard.cardHolder,
+                               id:item.bankCard.id,
                                createTime:item.bankCard.createTime,
                                userEmail:item.userEmail,
                                apId:item.apId,
-                               id:item.id,
+
                                _id:item._id,
                                userName:item.userName,
                            };
@@ -188,6 +232,7 @@ export default {
             }else {
                 return ''
             }
-        }
+        },
+
     }
 }

@@ -43,6 +43,7 @@
                     <el-date-picker
                         v-model="rebateFrom.startTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -50,6 +51,7 @@
                     <el-date-picker
                         v-model="rebateFrom.endTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>

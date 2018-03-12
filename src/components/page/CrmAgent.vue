@@ -9,7 +9,7 @@
                    <el-input v-model.number="searchCrmAgent.referralCode" placeholder="代理ID" class="handle-input mr10"></el-input>
                </el-form-item>
                 <el-form-item prop="agentLevel">
-                    <el-select v-model="searchCrmAgent.agentLevel" placeholder="代理级别">
+                    <el-select v-model="searchCrmAgent.agentLevel" placeholder="代理等级">
                         <el-option v-for="level in levelList" :key="level.value" :value="level.value" :label="level.label"></el-option>
                     </el-select>
                 </el-form-item>
@@ -36,8 +36,8 @@
                     <el-form-item label="英文名称"  prop="userEngName">
                         <el-input v-model="addAgentFormModel.userEngName" @key.native.enter="addCrmAgentFrom('addAgentFormModel')"></el-input>
                     </el-form-item>
-                    <el-form-item label="邮箱"  prop="userEmail">
-                        <el-input v-model="addAgentFormModel.userEmail" @key.native.enter="addCrmAgentFrom('addAgentFormModel')"></el-input>
+                    <el-form-item label="拼音" prop="spell">
+                        <el-input v-model="addAgentFormModel.spell" @key.native.enter="addCrmAgentFrom('addAgentFormModel')"></el-input>
                     </el-form-item>
                     <el-form-item label="性别">
                         <el-radio-group v-model="addAgentFormModel.sex" >
@@ -53,8 +53,8 @@
                         >
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="代理级别" prop="agentLevel">
-                        <el-select v-model="addAgentFormModel.agentLevel" placeholder="请选择代理级别"
+                    <el-form-item label="代理等级" prop="agentLevel">
+                        <el-select v-model="addAgentFormModel.agentLevel" placeholder="请选择代理等级"
                                    @key.native.enter="addCrmAgentFrom('addAgentFormModel')" :disabled="disAgentLevel">
                             <el-option  :value="item.value" :key="item.value" :label="item.label" v-for="item in levelList"></el-option>
                         </el-select>
@@ -80,6 +80,9 @@
                             expand-trigger="hover"
                             :filterable="true">
                         </el-cascader>
+                    </el-form-item>
+                    <el-form-item label="邮箱"  prop="userEmail">
+                        <el-input v-model="addAgentFormModel.userEmail" @key.native.enter="addCrmAgentFrom('addAgentFormModel')"></el-input>
                     </el-form-item>
                     <el-form-item class="width-40" label="手机号"  prop="userPhone">
                         <el-input v-model="addAgentFormModel.userPhone"></el-input>
@@ -109,7 +112,7 @@
             <el-table-column label="认证状态" align="center">
                 <template scope="scope">
                     <span v-if="scope.row.verifyStatus===-1">认证中</span>
-                    <span v-if="scope.row.verifyStatus===0">未认证</span>
+                    <span v-if="scope.row.verifyStatus===0" style="color:red;">未认证</span>
                     <span v-if="scope.row.verifyStatus===1">认证成功</span>
                     <span v-if="scope.row.verifyStatus===2">认证失败</span>
                 </template>
@@ -124,6 +127,7 @@
             <el-table-column prop="status" label="账户状态"  width="60" align="center">
                 <template scope="scope">
                     <span v-if="scope.row.status==1">正常</span>
+                    <span v-if="scope.row.status==2">暂停</span>
                     <span v-if="scope.row.status==-1">冻结</span>
                     <span v-if="scope.row.status==0">未激活</span>
                 </template>
@@ -152,12 +156,13 @@
                                     <div class="typeContent varietyName">
                                         <!--由于item的所有symbolType都是一样的，所以选择item[0].symbolType显示-->
                                         <span>{{ item[0].symbolType }}</span>
-                                        <label class="typeInfo comsLabel" v-for="child in item" @click="changeVal(child,$event)">
+                                        <label class="typeInfo" v-for="child in item">
+                                            <div class="test" @click="changeVal(child,$event)"></div>
                                             <span class="typeInfo__input" v-bind:class="{ isChecked: child.selected }" @click="show1($event)">
                                                 <span class="typeInfo__inner"></span>
                                                 <input type="radio" class="typeInfo__original" :value="child._id">
                                             </span>
-                                            <span class="typeInfo__label">{{ child.name }}</span>
+                                            <span class="typeInfo__label" @click="show1($event)">{{ child.name }}</span>
                                         </label>
                                     </div>
                                 </template>
@@ -168,32 +173,38 @@
                                @click="changeBalance(scope.row)">调整金额</el-button>
                     <el-dialog title="调整金额" :visible.sync="changeBalanceVisible">
                         <el-form :model="changeBalanceForm" label-width="120px" ref="changeBalanceForm" :rules="changeBalanceRules">
-                            <el-form-item class="width-40 marginR10" label="邮箱" prop="agentEmail">
-                                <el-input v-model="changeBalanceForm.Email" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="钱包余额" prop="Balance">
-                                <el-input v-model="changeBalanceForm.Balance" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="调整类型" required prop="changeType">
-                                <el-select v-model="changeBalanceForm.changeType">
-                                    <el-option label="入金" value="1"></el-option>
-                                    <el-option label="出金" value="-1"></el-option>
-                                    <el-option label="添加佣金" value="2"></el-option>
-                                    <el-option label="减少佣金" value="-2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="金额" prop="Count">
-                                <el-input v-model="changeBalanceForm.Count"></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="管理员备注" >
-                                <el-input v-model="changeBalanceForm.AdminTip"></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10">
-                                <template>
-                                    <el-button @click="changeBalanceVisible = false">取 消</el-button>
-                                    <el-button type="primary" @click="changeBalanceS('changeBalanceForm')">确 定</el-button>
-                                </template>
-                            </el-form-item>
+                            <el-row>
+                                <el-form-item class="width-40 marginR10" label="姓名" prop="IDName">
+                                    <el-input v-model="changeBalanceForm.IDName" disabled></el-input>
+                                </el-form-item>
+                                <el-form-item class="width-40 marginR10" label="钱包余额" prop="Balance">
+                                    <el-input v-model="changeBalanceForm.Balance" disabled></el-input>
+                                </el-form-item>
+                            </el-row>
+                            <el-row>
+                                <el-form-item class="width-40 marginR10" label="调整类型" required prop="changeType">
+                                    <el-select v-model="changeBalanceForm.changeType" style="width: 100%">
+                                        <el-option label="入金" value="1"></el-option>
+                                        <el-option label="出金" value="-1"></el-option>
+                                        <el-option label="添加佣金" value="2"></el-option>
+                                        <el-option label="减少佣金" value="-2"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item class="width-40 marginR10" label="金额" prop="Count">
+                                    <el-input v-model="changeBalanceForm.Count"></el-input>
+                                </el-form-item>
+                            </el-row>
+                            <el-row>
+                                <el-form-item class="width-40 marginR10" label="管理员备注" >
+                                    <el-input v-model="changeBalanceForm.AdminTip"></el-input>
+                                </el-form-item>
+                                <el-form-item class="width-40 marginR10">
+                                    <template>
+                                        <el-button type="primary" @click="changeBalanceS('changeBalanceForm')">确 定</el-button>
+                                        <el-button @click="changeBalanceVisible = false">取 消</el-button>
+                                    </template>
+                                </el-form-item>
+                            </el-row>
                         </el-form>
                     </el-dialog>
                     <el-button size="small"
@@ -227,27 +238,34 @@
                             </el-col>
                             <el-col :span="24">
                                 <el-col :span="12">
-                                    <el-form-item label="邮箱" prop="userEmail">
-                                        <el-input v-model="baseInfoAgentForm.userEmail" disabled=""
-                                                  ></el-input>
+                                    <el-form-item label="拼音" prop="spell">
+                                        <el-input v-model="baseInfoAgentForm.spell" :disabled="baseInfoEditVisible"></el-input>
                                     </el-form-item>
+
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="电话" prop="userPhone">
-                                        <el-input v-model="baseInfoAgentForm.userPhone" :disabled="baseInfoEditVisible"></el-input>
+                                    <el-form-item label="邮箱" prop="userEmail">
+                                        <el-input v-model="baseInfoAgentForm.userEmail" disabled=""
+                                        ></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-col>
                             <el-col :span="24">
                                 <el-col :span="12">
-                                    <el-form-item label="代理级别" prop="agentLevel">
-                                        <el-select v-model="baseInfoAgentForm.agentLevel" placeholder="请选择代理级别" disabled="">
+                                    <el-form-item label="电话" prop="userPhone">
+                                        <el-input v-model="baseInfoAgentForm.userPhone" :disabled="baseInfoEditVisible"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="代理等级" prop="agentLevel">
+                                        <el-select v-model="baseInfoAgentForm.agentLevel" placeholder="请选择代理等级" disabled="">
                                             <el-option  :value="item.value" :key="item.value" :label="item.label" v-for="item in levelList"></el-option>
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
+                            </el-col>
+                            <el-col :span="24">
                                 <el-col :span="12">
-
                                     <el-form-item label="返佣规则" prop="RebateType">
                                         <el-select v-model="baseInfoAgentForm.RebateType" disabled="">
                                             <el-option  v-for="(item, index) in comsRules" :key="item.value" :value="item.value"
@@ -255,14 +273,16 @@
 
                                         </el-select>
                                     </el-form-item>
+
                                 </el-col>
-                            </el-col>
-                            <el-col :span="24">
                                 <el-col :span="12">
                                     <el-form-item label="国家" prop="country">
                                         <el-input v-model="baseInfoAgentForm.country" :disabled="baseInfoEditVisible"></el-input>
                                     </el-form-item>
+
                                 </el-col>
+                            </el-col>
+                            <el-col :span="24">
                                 <el-col :span="12">
                                     <el-form-item label="性别"  v-if="baseInfoEditVisible">
                                         <el-input v-model="baseInfoAgentForm.sex"
@@ -274,9 +294,8 @@
                                             <el-radio :label="'女'" >女</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
+
                                 </el-col>
-                            </el-col>
-                            <el-col :span="24">
                                 <el-col :span="12">
                                     <el-form-item label="出生日期" prop="birthDay">
                                         <el-date-picker
@@ -287,7 +306,10 @@
                                         >
                                         </el-date-picker>
                                     </el-form-item>
+
                                 </el-col>
+                            </el-col>
+                            <el-col :span="24">
                                 <el-col :span="12">
                                     <el-form-item label="用户界面语言" >
                                         <el-select v-model="baseInfoAgentForm.setUILocale" :disabled="baseInfoEditVisible" placeholder="请选择用户界面语言">
@@ -295,8 +317,6 @@
                                         </el-select>
                                     </el-form-item>
                                 </el-col>
-                            </el-col>
-                            <el-col :span="24">
                                 <el-col :span="12">
                                     <el-form-item label="省市区"  prop="address">
                                         <el-cascader
@@ -308,37 +328,42 @@
                                         </el-cascader>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="12">
-                                    <el-form-item label="上级代理邮箱" prop="superUserEmail">
-                                        <el-input v-model="baseInfoAgentForm.superUserEmail" disabled=""></el-input>
-                                    </el-form-item>
-                                </el-col>
                             </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="账户状态">
-                                    <el-radio-group v-model="baseInfoAgentForm.status"  :disabled="baseInfoEditVisible">
-                                        <el-radio :label="1">正常</el-radio>
-                                        <el-radio :label="2" >冻结</el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="联系地址" prop="addressDetail">
-                                    <el-input v-model="baseInfoAgentForm.addressDetail" :disabled="baseInfoEditVisible"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item >
-                                    <div class="dialog-footer" v-if="baseInfoEditVisible">
-                                        <el-button type="primary" @click="baseInfoAgentEdit" style="float: right">编 辑</el-button>
-                                    </div>
-                                    <div class="dialog-footer" v-else>
-                                        <el-button @click="ResetAgentPWD" style="float: right">重置密码</el-button>
-                                        <el-button type="primary" @click="saveAgentBaseInfo('baseInfoAgentForm')" style="float: right">提交信息</el-button>
+                           <el-col :span="24">
+                               <el-col :span="12">
+                                   <el-form-item label="上级代理邮箱" prop="superUserEmail">
+                                       <el-input v-model="baseInfoAgentForm.superUserEmail" disabled=""></el-input>
+                                   </el-form-item>
 
-                                    </div>
-                                </el-form-item>
-                            </el-col>
+                               </el-col>
+                               <el-col :span="12">
+                                   <el-form-item label="账户状态">
+                                       <el-radio-group v-model="baseInfoAgentForm.status"  :disabled="baseInfoEditVisible">
+                                           <el-radio :label="1">正常</el-radio>
+                                           <el-radio :label="-1" >冻结</el-radio>
+                                       </el-radio-group>
+                                   </el-form-item>
+                               </el-col>
+                           </el-col>
+                           <el-col :span="24">
+                               <el-col :span="12">
+                                   <el-form-item label="联系地址" prop="addressDetail">
+                                       <el-input v-model="baseInfoAgentForm.addressDetail" :disabled="baseInfoEditVisible"></el-input>
+                                   </el-form-item>
+                               </el-col>
+                               <el-col :span="12">
+                                   <el-form-item >
+                                       <div class="dialog-footer" v-if="baseInfoEditVisible">
+                                           <el-button type="primary" @click="baseInfoAgentEdit" style="float: right">编 辑</el-button>
+                                       </div>
+                                       <div class="dialog-footer" v-else>
+                                           <el-button @click="ResetAgentPWD" style="float: right">重置密码</el-button>
+                                           <el-button type="primary" @click="saveAgentBaseInfo('baseInfoAgentForm')" style="float: right">提交信息</el-button>
+                                       </div>
+                                   </el-form-item>
+                               </el-col>
+                           </el-col>
+
                         </el-row>
                     </el-form>
                 </el-tab-pane>
@@ -395,7 +420,7 @@
                                 <el-upload
                                     class="upload-demo"
                                     drag
-                                    action="http://120.77.55.98:8080/crm/ap/img/upload"
+                                    :action="bankCardHeadPicUpload"
                                     multiple
                                     :show-file-list="false"
                                     :before-upload="beforeBankHeadPicUpload"
@@ -418,7 +443,7 @@
                                     drag
                                     :before-upload="beforeBankHeadPicUpload"
                                     :on-success="handleSuccessAgentBankTailPic"
-                                    action="http://120.77.55.98:8080/crm/ap/img/upload"
+                                    :action="bankCardTailPicUpload"
                                     :show-file-list="false"
                                     multiple>
                                     <img :src="scope.row.bankCardTailPic"/>

@@ -7,7 +7,7 @@
                 </el-form-item>
                 <el-form-item prop="select_status">
                     <el-select v-model="leverageModify.select_status" class="handle-select mr10">
-                        <el-option key="-1" label="所有审核状态" value="-1"></el-option>
+                        <el-option key="-1" label="全部审核状态" value="-1"></el-option>
                         <el-option key="1" label="已审核" value="1"></el-option>
                         <el-option key="2" label="已拒绝" value="2"></el-option>
                         <el-option key="0" label="待审核" value="0"></el-option>
@@ -41,12 +41,12 @@
             <el-table-column label="操作" width="250">
                 <template scope="scope">
                     <el-button  v-if="scope.$index!==rowIndex"
-                               @click="startLeverageAudit(scope.$index)"
-                               size="small" :disabled="scope.row.auditVisible">审核
+                                @click="startLeverageAudit(scope.$index)"
+                                size="small" :disabled="scope.row.auditVisible">审核
                     </el-button>
                     <el-button   v-if="scope.$index!==rowIndex"
-                               @click="stopLeverageRefuse(scope.$index)"
-                               size="small" :disabled="scope.row.auditVisible">拒绝
+                                 @click="stopLeverageRefuse(scope.$index)"
+                                 size="small" :disabled="scope.row.auditVisible">拒绝
                     </el-button>
                     <el-button  v-if="scope.$index===rowIndex" @click="LeverageAudit(scope.row)" size="small">保 存</el-button>
                     <el-button  v-if="scope.$index===rowIndex" @click="LeverageRefuse(scope.row)" size="small">取 消</el-button>

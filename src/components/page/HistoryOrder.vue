@@ -23,6 +23,7 @@
                     <el-date-picker
                         v-model="orderSelect.startTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -30,6 +31,7 @@
                     <el-date-picker
                         v-model="orderSelect.endTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>
@@ -62,7 +64,7 @@
             </el-table-column>
             <el-table-column prop="TradeVolume" label="交易手数"></el-table-column>
             <el-table-column prop="TradeSymbol" label="交易品种"></el-table-column>
-            <el-table-column prop="TradeOpenPrice" label="开仓价格"></el-table-column>
+            <el-table-column prop="Price" label="开仓价格"></el-table-column>
             <el-table-column label="止盈/止损">
                 <template scope="scope">
                     <span>{{ scope.row.TradeTP }} / {{ scope.row.TradeSL }}</span>

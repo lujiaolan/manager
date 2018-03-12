@@ -2,9 +2,9 @@
     <div class="crmAgent">
         <div class="handle-box">
             <el-form :model="commissionAudit" :rules="commissionAudit_rules" ref="commissionAudit" class="outMoneyMarginR20">
-                <el-form-item prop="select_MT4ID">
-                    <el-input v-model="commissionAudit.tradeAccount" placeholder="交易账户" class="handle-input mr10"></el-input>
-                </el-form-item>
+                <!--<el-form-item prop="select_MT4ID">-->
+                <!--<el-input v-model="commissionAudit.tradeAccount" placeholder="交易账户" class="handle-input mr10"></el-input>-->
+                <!--</el-form-item>-->
                 <el-form-item prop="select_MT4ID">
                     <el-input v-model="commissionAudit.commAccount" placeholder="返佣账户" class="handle-input mr10"></el-input>
                 </el-form-item>
@@ -20,6 +20,7 @@
                     <el-date-picker
                         v-model="commissionAudit.dateValue1"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -27,6 +28,7 @@
                     <el-date-picker
                         v-model="commissionAudit.dateValue2"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>
@@ -47,48 +49,49 @@
             </el-form>
         </div>
         <el-table :data="commissionAudit.tableData" border style="width: 100%" class="comAudit grayTable" :rowClassName="refuseRow">
-            <el-table-column prop="_id" label="订单编号" width=""></el-table-column>
+            <el-table-column prop="_id" label="交易编号" width="180"></el-table-column>
             <el-table-column label="申请时间" width="">
                 <template scope="scope">
-                    <span class="dateTime">{{ scope.row.applyTime }}</span>
+                    <span class="dateTime">{{ scope.row.time }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="交易账户" width="">
-                <template scope="scope">
-                    <span>{{ scope.row.srcUserLoginID }}</span> -
-                    <span>{{ scope.row.srcIDName }}</span>
-                </template>
-            </el-table-column>
+            <!--<el-table-column label="交易账户" width="">-->
+            <!--<template scope="scope">-->
+            <!--<span>{{ scope.row.srcUserLoginID }}</span> - -->
+            <!--<span>{{ scope.row.srcIDName }}</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
             <el-table-column label="返佣账户" width="">
                 <template scope="scope">
                     <span>{{ scope.row.referralCode }}</span> -
                     <span>{{ scope.row.IDName }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="TradeCmd" label="交易类型" width="">
-                <template scope="scope">
-                    <span v-if="scope.row.TradeCmd == 1">sell</span>
-                    <span v-if="scope.row.TradeCmd == 0">buy</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="symbolType" label="交易种类" width=""></el-table-column>
-            <el-table-column prop="volume" label="交易手数" width=""></el-table-column>
-            <el-table-column label="返佣等级">
-                <template scope="scope">
-                    <span v-if="scope.row.agentLevel==1">一级代理</span>
-                    <span v-if="scope.row.agentLevel==2">二级代理</span>
-                    <span v-if="scope.row.agentLevel==3">三级代理</span>
-                    <span v-if="scope.row.agentLevel==4">四级代理</span>
-                    <span v-if="scope.row.agentLevel==5">五级代理</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="返佣规则">
-                <template scope="scope">
-                    <span v-if="scope.row.ruleType==1">固定 - {{ scope.row.commissionMoney }} / 手</span>
-                    <span v-else>极差 - {{ scope.row.commissionMoney }} / 手</span>
-                </template>
-            </el-table-column>
+            <!--<el-table-column prop="TradeCmd" label="交易类型" width="">-->
+            <!--<template scope="scope">-->
+            <!--<span v-if="scope.row.TradeCmd == 1">sell</span>-->
+            <!--<span v-if="scope.row.TradeCmd == 0">buy</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column prop="symbolType" label="交易种类" width=""></el-table-column>-->
+            <!--<el-table-column prop="volume" label="交易手数" width=""></el-table-column>-->
+            <!--<el-table-column label="返佣等级">-->
+            <!--<template scope="scope">-->
+            <!--<span v-if="scope.row.agentLevel==1">一级代理</span>-->
+            <!--<span v-if="scope.row.agentLevel==2">二级代理</span>-->
+            <!--<span v-if="scope.row.agentLevel==3">三级代理</span>-->
+            <!--<span v-if="scope.row.agentLevel==4">四级代理</span>-->
+            <!--<span v-if="scope.row.agentLevel==5">五级代理</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+            <!--<el-table-column label="返佣规则">-->
+            <!--<template scope="scope">-->
+            <!--<span v-if="scope.row.ruleType==1">固定 - {{ scope.row.commissionMoney }} / 手</span>-->
+            <!--<span v-else>极差 - {{ scope.row.commissionMoney }} / 手</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
             <el-table-column prop="money" label="返佣金额($)"></el-table-column>
+            <el-table-column prop="count" label="返佣笔数"></el-table-column>
             <el-table-column label="审核时间" width="">
                 <template scope="scope">
                     <span class="dateTime">{{ scope.row.handleTime }}</span>
@@ -99,6 +102,11 @@
                     <span v-if="scope.row.status==1">已审核</span>
                     <span v-if="scope.row.status==2">待审核</span>
                     <span v-if="scope.row.status==-1">已拒绝</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="佣金明细">
+                <template scope="scope">
+                    <el-button size="small" @click="showTransactionDetail(scope.row)">详情</el-button>
                 </template>
             </el-table-column>
             <el-table-column prop="remarks" label="备注" width="">
@@ -121,6 +129,49 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog title="交易详情" :visible.sync="transactionDetailVisible">
+            <h4>交易编号：{{ transactionId }}</h4>
+            <el-table :data="transactionDetailData" border style="width: 100%;margin-top: 10px" class="comAudit grayTable"
+                      :rowClassName="refuseRow">
+                <el-table-column prop="_id" label="订单编号" width="180"></el-table-column>
+                <el-table-column label="交易账户">
+                    <template scope="scope">
+                        <span>{{ scope.row.srcUserLoginID }}</span> -
+                        <span>{{ scope.row.srcIDName }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="返佣账户">
+                    <template scope="scope">
+                        <span>{{ scope.row.referralCode }}</span> -
+                        <span>{{ scope.row.IDName }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="返佣账户等级">
+                    <template scope="scope">
+                        <span v-if="scope.row.agentLevel==1">一级代理</span>
+                        <span v-if="scope.row.agentLevel==2">二级代理</span>
+                        <span v-if="scope.row.agentLevel==3">三级代理</span>
+                        <span v-if="scope.row.agentLevel==4">四级代理</span>
+                        <span v-if="scope.row.agentLevel==5">五级代理</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="TradeCmd" label="交易类型" width="">
+                    <template scope="scope">
+                        <span v-if="scope.row.TradeCmd == 1">sell</span>
+                        <span v-if="scope.row.TradeCmd == 0">buy</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="symbolType" label="交易种类" width=""></el-table-column>
+                <el-table-column prop="volume" label="交易手数" width=""></el-table-column>
+                <el-table-column label="返佣规则">
+                    <template scope="scope">
+                        <span v-if="scope.row.ruleType==1">固定 - {{ scope.row.commissionMoney }} / 手</span>
+                        <span v-else>极差 - {{ scope.row.commissionMoney }} / 手</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="money" label="返佣金额($)"></el-table-column>
+            </el-table>
+        </el-dialog>
         <div class="rightPart">
             <div style="margin-right: 6px">共 {{ commissionAudit.tableData.totalCountApply }} 页</div>
             <el-pagination @current-change="auditCurrentChange"

@@ -60,6 +60,7 @@ export default {
             }).then(function (res) {
                 console.log('获取组别数据');
                 console.log(res);
+                self.groupFrom = [];
                 if(res.data.retCode === 0){
                     let val = '';
                     let groupObj = {};

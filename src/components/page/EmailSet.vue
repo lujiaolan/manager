@@ -9,10 +9,21 @@
                                 <el-input v-model="listSearchForm.searchEmail" placeholder="邮箱"
                                           class="handle-input mr10"></el-input>
                             </el-form-item>
+                            <el-form-item prop="emailResult">
+                                <el-select v-model="listSearchForm.emailResult">
+                                    <el-option
+                                        v-for="item in resultOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
                             <el-form-item prop="timeBegin">
                                 <el-date-picker
                                     v-model="listSearchForm.timeBegin"
                                     type="date"
+                                    :editable="editableDate"
                                     placeholder="时间从">
                                 </el-date-picker>
                             </el-form-item>
@@ -20,6 +31,7 @@
                                 <el-date-picker
                                     v-model="listSearchForm.timeEnd"
                                     type="date"
+                                    :editable="editableDate"
                                     placeholder="时间至">
                                 </el-date-picker>
                             </el-form-item>
@@ -45,15 +57,8 @@
                                 label="发送时间">
                             </el-table-column>
                             <el-table-column
-                                prop="templUrl"
-                                label="邮件模板">
-                            </el-table-column>
-                            <el-table-column
-                                label="发送结果">
-                                <template scope="scope">
-                                    <span v-if="scope.row.emailResult == 0">成功</span>
-                                    <span v-if="scope.row.emailResult == 1">失败</span>
-                                </template>
+                                prop="senderEmail"
+                                label="发件人邮箱">
                             </el-table-column>
                             <el-table-column
                                 prop="emailRecipients"
@@ -64,10 +69,25 @@
                                 label="邮件标题">
                             </el-table-column>
                             <el-table-column
+                                prop="templUrl"
+                                label="邮件模板">
+                            </el-table-column>
+                            <el-table-column
+                                label="发送结果">
+                                <template scope="scope">
+                                    <span v-if="scope.row.emailResult == 0">成功</span>
+                                    <span v-if="scope.row.emailResult == -1">失败</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="errMsg"
+                                label="错误信息">
+                            </el-table-column>
+                            <el-table-column
                                 label="操作">
                                 <template scope="scope">
                                     <el-button size="small" @click="emailListWatch(scope.row)">查看</el-button>
-                                    <el-button v-if="scope.row.emailResult == 1" size="small" @click="reSendEmail(scope.row)">重发</el-button>
+                                    <el-button v-if="scope.row.emailResult == -1" size="small" @click="reSendEmail(scope.row)">重发</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -88,9 +108,6 @@
             </el-tab-pane>
             <el-tab-pane label="邮件模板" name="second">
                 <email-templateSet></email-templateSet>
-            </el-tab-pane>
-            <el-tab-pane label="邮件信息上传">
-                <email-info></email-info>
             </el-tab-pane>
         </el-tabs>
     </div>

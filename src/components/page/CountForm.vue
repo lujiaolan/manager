@@ -20,6 +20,7 @@
                 </el-form-item>
                 <el-form-item prop="startTime">
                     <el-date-picker
+                        :editable="editableDate"
                         v-model="orderSelect.startTime"
                         type="date"
                         placeholder="开始时间">
@@ -27,6 +28,7 @@
                 </el-form-item>
                 <el-form-item prop="endTime">
                     <el-date-picker
+                        :editable="editableDate"
                         v-model="orderSelect.endTime"
                         type="date"
                         placeholder="结束时间">

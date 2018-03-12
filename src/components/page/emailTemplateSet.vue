@@ -1,9 +1,17 @@
 <template>
     <div>
-        <div class="emailTemplateSearchBox crmAgent handle-box">
-            <el-input v-model="templSubject"
-                      placeholder="邮件模板标题" class="handle-input"></el-input>
-            <el-button type="primary" @click="templateSearch">查询</el-button>
+        <div class="emailTemplateSearchBox crmAgent">
+            <div class="handle-box">
+                <el-form class="outMoneyMarginR20">
+                    <el-form-item>
+                        <el-input v-model="templSubject"
+                                  placeholder="邮件模板标题" class="handle-input"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="templateSearch">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
         </div>
         <div  class="emailTemplateFormBox">
             <el-table
@@ -35,5 +43,5 @@
     </div>
 </template>
 <script>
-    module.exports = require('../pageJS/emailTemplateSet')
+    module.exports = require('../pageJS/EmailTemplateSet')
 </script>

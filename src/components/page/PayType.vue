@@ -10,7 +10,7 @@
 			      :value="item.value">
 			    </el-option>
 			</el-select>
-			<el-select v-model="searchPayType.payStatus" placeholder="是否启用" class="mgr20">
+			<el-select v-model="searchPayType.payStatus" placeholder="状态" class="mgr20">
 			    <el-option
 			      v-for="item in optionsIfUse"
 			      :key="item.value"
@@ -40,7 +40,7 @@
 		    </el-table-column>
 		    <el-table-column
 		    	prop="payStatus"
-		    	label="是否启用">
+		    	label="状态">
                 <template scope="scope">
                     <span v-if="scope.row.payStatus==1">启用 </span>
                     <span v-if="scope.row.payStatus==0">禁用 </span>

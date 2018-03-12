@@ -3,6 +3,8 @@ export default {
 
     data() {
         return {
+            bankCardHeadPicUpload: '',
+            bankCardTailPicUpload: '',
             totalCrmUser:null,
             toAgentVisible:false,
             toAgentInfoList:[],
@@ -82,7 +84,7 @@ export default {
                 },
                 {
                     label:'中文',
-                    value:'chinese'
+                    value:'Chinese'
                 }
 
             ],
@@ -237,6 +239,7 @@ export default {
                 referralCode:'',
                 userEngName:'',
                 userPhone:'',
+                spell:'',
                 sex:'男',
                 birthDay:'',
                 country:'',
@@ -261,7 +264,7 @@ export default {
                             if(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)){
                                 this.$ajax({
                                     method:'post',
-                                    url:'/user/dumpRepeat',
+                                    url:'/other/user/dumpRepeat',
                                     data:{
                                         apId:this.addAgentForm.apId,
                                         userEmail:value
@@ -292,7 +295,7 @@ export default {
                             if(/^1[3,4,5,7,8]\d{9}$/.test(value)){
                                 this.$ajax({
                                     method:'post',
-                                    url:'/user/dumpRepeat',
+                                    url:'/other/user/dumpRepeat',
                                     data:{
                                         apId:this.addAgentForm.apId,
                                         userPhone:value
@@ -321,7 +324,7 @@ export default {
                                 if(typeof value=='number'){
                                     this.$ajax({
                                         method:'get',
-                                        url:'/user/'+value+'/superInfo',
+                                        url:'/other/user/'+value+'/superInfo',
                                     }).then(function (res) {
                                         if(res.data.retCode==0){
                                            callback();
@@ -448,6 +451,10 @@ export default {
                     level = '四级代理';
                     superId = val.superAgentId
                     levelSelf = 4;
+                }else if(val.agentLevel===4){
+                    level = '五级代理';
+                    superId = val.superAgentId
+                    levelSelf = 5;
                 }
                 this.toAgentInfo.levelSelf = level;
                 this.toAgentInfo.superAgentId = superId;
@@ -489,11 +496,13 @@ export default {
             let selfStatus = [];
             let ralCode = null;
             if(this.CRMUserSearch.status===null){
-                selfStatus = [-1,1];
-            }else if(this.CRMUserSearch.status==1){
+                selfStatus = [-1,1,0];
+            }else if(this.CRMUserSearch.status===1){
                 selfStatus = [1]
-            }else {
-                selfStatus = [-1]
+            }else if(this.CRMUserSearch.status===-1){
+                selfStatus = [-1];
+            }else{
+                selfStatus = [-1,1,0];
             }
             if(this.CRMUserSearch.referralCode==null||this.CRMUserSearch.referralCode==''){
                 ralCode = null;
@@ -577,8 +586,9 @@ export default {
 
 
         addCrmAgent(ref){
-            // this.addAgentFormVisible = false;
             const self = this;
+            console.log("提交地址")
+            console.log(this.addAgentForm.address);
             const postRepeat = {
                 apId:this.addAgentForm.apId,
                 userEmail:self.addAgentForm.userEmail,
@@ -597,6 +607,7 @@ export default {
                         userEngName:self.addAgentForm.userEngName,
                         userPhone:self.addAgentForm.userPhone,
                         sex:self.addAgentForm.sex,
+                        spell:self.addAgentForm.spell,
                         birthDay:self.moment(self.addAgentForm.birthDay).format('YYYY-MM-DD'),
                         country:self.addAgentForm.country,
                         address:self.addAgentForm.address,
@@ -607,6 +618,7 @@ export default {
                         url:'/user/add',
                         data:postData
                     }).then(function (res) {
+                        console.log(res)
                         if (res.data.retCode==0){
                             self.$message({
                                 type:'info',
@@ -618,7 +630,7 @@ export default {
                         }else {
                             self.$message({
                                 type:'warning',
-                                message:'添加失败',
+                                message:'添加失败,失败原因:'+res.data.data.errMsg,
                                 showCloe:true
                             });
                         }
@@ -651,11 +663,13 @@ export default {
         },
         handleSuccessUserBankTailPic(res,files){
             this.baseUserBankCard[this.editVisibleUserIndex].bankCardTailPic = files.url;
-            this.postBankImg.bankCardTailPic = files.response.data.fileName;
+            // this.postBankImg.bankCardTailPic = files.response.data.fileName;
+            this.postBankImg.bankCardTailPic = res.data;
         },
         handleSuccessUserBankHeadPic(res,files){
             this.baseUserBankCard[this.editVisibleUserIndex].bankCardHeadPic = files.url;
-            this.postBankImg.bankCardHeadPic = files.response.data.fileName;
+            // this.postBankImg.bankCardHeadPic = files.response.data.fileName;
+            this.postBankImg.bankCardHeadPic = res.data;
         },
         baseInfoShow(index, row) {
             console.log(row)
@@ -664,7 +678,7 @@ export default {
             self.baseInfoVisible = true;
            this.$ajax({
                method:'get',
-               url:'/user/'+row._id
+               url:'/other/user/'+row._id
            }).then(function (res) {
                if(res.data.retCode==0){
                    const getUserList = res.data.data;
@@ -678,16 +692,31 @@ export default {
                    console.log(getUserList)
                    let IDCardHead  = '';
                    let IDCardTail = '';
-                   if(res.data.data.IDCard.IDCardHeadPic){
-                       IDCardHead = "http://"+getUserList.IDCard.IDCardHeadPic;
-                       IDCardTail = "http://"+getUserList.IDCard.IDCardTailPic;
+                   let IDNumbers = '';
+                   if(res.data.data.IDCard){
+                       if(res.data.data.IDCard.IDCardHeadPic){
+                           IDCardHead = "http://"+getUserList.IDCard.IDCardHeadPic;
+                           IDCardTail = "http://"+getUserList.IDCard.IDCardTailPic;
+                       }else{
+                           IDCardHead = '';
+                           IDCardTail = '';
 
+                       }
+                       IDNumbers =getUserList.IDCard.IDNumber;
+
+                   }else{
+                       IDCardHead = '';
+                       IDCardTail = '';
+                       IDNumbers = '';
                    }
                    let roles = ''
                    if(getUserList.role=='commonUser'){
                        roles = '普通用户'
                    }else{
                        roles = '未识别用户'
+                   }
+                   if(getUserList.setUILocale === 'chinese' || getUserList.setUILocale === 'Chinese'){
+                       getUserList.setUILocale = "中文"
                    }
                    self.baseInfoUserForm = {
                        IDName: getUserList.IDName,
@@ -698,6 +727,7 @@ export default {
                        roles:roles,
                        userEmail:getUserList.userEmail,
                        role:getUserList.role,
+                       spell:getUserList.spell,
                        verifyStatus:getUserList.verifyStatus,
                        sex:getUserList.sex,
                        apId:getUserList.apId,
@@ -707,7 +737,7 @@ export default {
                        country:getUserList.country,
                        IDCardHeadPic:IDCardHead,
                        IDCardTailPic:IDCardTail,
-                       IDNumber:getUserList.IDCard.IDNumber,
+                       IDNumber:IDNumbers,
                        status:getUserList.status,
                        _id:getUserList._id,
                        setUILocale:getUserList.setUILocale,
@@ -716,7 +746,7 @@ export default {
                    const bankCardRow = getUserList.bankCard;
                    console.log('bankCardRow')
                    console.log(bankCardRow)
-                   const bankCardConfig = [];
+                   let bankCardConfig = [];
                    if(bankCardRow) {
                        bankCardRow.forEach(function (item) {
                            const bank = {
@@ -733,6 +763,8 @@ export default {
                            };
                            bankCardConfig.push(bank)
                        });
+                   }else{
+                       bankCardConfig = [];
                    }
                    self.baseUserBankCard = bankCardConfig;
                }
@@ -746,7 +778,6 @@ export default {
         },
         saveBaseInfo(){
             console.log(this.baseInfoUserForm);
-            // this.baseInfoVisible = false;
                 const postData = {
                     IDName: this.baseInfoUserForm.IDName,
                     userId: this.baseInfoUserForm._id,
@@ -756,6 +787,7 @@ export default {
                     role:this.baseInfoUserForm.role,
                     verifyStatus:this.baseInfoUserForm.verifyStatus,
                     sex:this.baseInfoUserForm.sex,
+                    spell:this.baseInfoUserForm.spell,
                     addressDetail:this.baseInfoUserForm.addressDetail,
                     apId:this.baseInfoUserForm.apId,
                     address:this.baseInfoUserForm.address,
@@ -847,6 +879,8 @@ export default {
             this.imgUser.imgUserImgBig = row;
         },
         changeBankCard(index,row){
+            this.bankCardHeadPicUpload = 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardHeadPic'+ row.userId + '?dir=ap-logo/&contentType=image/jpeg';
+            this.bankCardTailPicUpload = 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardTailPic'+ row.userId + '?dir=ap-logo/&contentType=image/jpeg';
             this.editVisibleUserIndex = index;
             this.postBankImg.bankCardHeadPic = row.bankCardHeadPic;
             this.postBankImg.bankCardTailPic = row.bankCardTailPic;
@@ -1010,7 +1044,8 @@ export default {
             const self = this;
             self.changeBalanceVisible = true;
             self.changeBalanceForm.userId = row._id;
-            self.changeBalanceForm.Email = row.userEmail;
+            // self.changeBalanceForm.Email = row.userEmail;
+            self.changeBalanceForm.IDName = row.IDName;
             self.changeBalanceForm.Balance = row.money;
             self.changeBalanceForm.Count = '';
             self.changeBalanceForm.changeType = '';
@@ -1128,17 +1163,17 @@ export default {
                         data:postData,
                         method:'post'
                     }).then(function (res) {
+                        console.log(res)
                         self.toAgentVisible = false;
                         if(res.data.retCode==0){
-                            console.log(res)
                             self.$alert('这是一段内容', '提示', {
-                              message: '升级成功，代理编号：'+res.data.data
+                              message: '申请成功，代理编号：'+res.data.data
                             });
                             self.getCRMUserList();
 
                         }else {
                             self.$alert('账户或资料未审核通过', '提示', {
-                              message:'账户或资料未审核通过 '
+                              message:'申请失败,失败理由:'+res.data.data.errMsg
                             });
                         }
                     }).catch(function (err) {

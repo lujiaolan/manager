@@ -3,6 +3,9 @@ export default {
     data() {
         let superAgen = '';
         return {
+            bankCardHeadPicUpload: '',
+            bankCardTailPicUpload: '',
+            checkedCities: '',
             editVisibleIndex:null,
             imgAgent:{
                 imgAgentShow:false,
@@ -17,7 +20,7 @@ export default {
             levelList:[
                 {
                     value:null,
-                    label:'代理级别'
+                    label:'代理等级'
                 },
                 {
                     value:1,
@@ -241,6 +244,7 @@ export default {
                 birthDay:'',
                 userEngName:"",
                 sex:"男",
+                spell:'',
                 agentLevel:"",
                 country:"",
                 setUILocale:"",
@@ -255,7 +259,7 @@ export default {
                 },
                 {
                     label:'中文',
-                    value:'chinese'
+                    value:'Chinese'
                 }
 
             ],
@@ -264,10 +268,10 @@ export default {
                     { required: true, message: '请输入中文名', trigger: 'blur' },
                     // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                 ],
-                userEngName: [
-                    { required: true, message: '请输入英文名', trigger: 'blur' },
-                    // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                ],
+                // userEngName: [
+                //     { required: true, message: '请输入英文名', trigger: 'blur' },
+                //     // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                // ],
                 userEmail: [
                     {  required: true,
                         validator:(rule,value,callback)=>{
@@ -277,7 +281,7 @@ export default {
                                 if(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)){
                                     this.$ajax({
                                         method:'post',
-                                        url:'/user/dumpRepeat',
+                                        url:'/other/user/dumpRepeat',
                                         data:{
                                             apId:this.addAgentFormModel.apId,
                                             userEmail:value
@@ -307,7 +311,7 @@ export default {
                                 if(typeof value=='number'){
                                     this.$ajax({
                                         method:'get',
-                                        url:'/user/'+value+'/superInfo',
+                                        url:'/other/user/'+value+'/superInfo',
                                     }).then(function (res) {
                                         if(res.data.retCode==0){
                                             if(res.data.data.agentLevel==5){
@@ -362,7 +366,7 @@ export default {
                                 if(/^1[3,4,5,7,8]\d{9}$/.test(value)){
                                     this.$ajax({
                                         method:'post',
-                                        url:'/user/dumpRepeat',
+                                        url:'/other/user/dumpRepeat',
                                         data:{
                                             apId:this.addAgentFormModel.apId,
                                             userPhone:value
@@ -397,6 +401,7 @@ export default {
             baseInfoAgentForm: {
                 superUserEmail:'',
                 IDName:'',
+                spell:'',
                 addressDetail:'',
                 IDNumber:'',
                 IDCardHeadPic:'',
@@ -527,7 +532,6 @@ export default {
             ).then(response => {
                 if (response.data) {
                     this.options = response.data.info
-
                 }
             });
         },
@@ -555,13 +559,13 @@ export default {
             console.log('this.searchCrmAgent.status')
             console.log(this.searchCrmAgent.status)
             if(this.searchCrmAgent.status==''||this.searchCrmAgent.status==null||this.searchCrmAgent.status==undefined){
-                statusList = [-1,1]
+                statusList = [-1,1,0]
             }if(this.searchCrmAgent.status===-1){
                 statusList = [-1]
             }else if(this.searchCrmAgent.status===1){
                 statusList = [1]
             }else{
-                statusList = [-1,1]
+                statusList = [-1,1,0]
             }
             if(this.searchCrmAgent.referralCode==''){
                 this.searchCrmAgent.referralCode = null;
@@ -678,6 +682,7 @@ export default {
                            referralCode:self.addAgentFormModel.referralCode,
                            agentLevel:self.addAgentFormModel.agentLevel,
                            country: self.addAgentFormModel.country,
+                           spell: self.addAgentFormModel.spell,
                            setUILocale: self.addAgentFormModel.setUILocale,
                            address: self.addAgentFormModel.address,
                            userPhone: self.addAgentFormModel.userPhone
@@ -714,7 +719,7 @@ export default {
                    }else{
                        self.$ajax({
                            method:'get',
-                           url:'/user/'+self.addAgentFormModel.referralCode+'/superInfo'
+                           url:'/other/user/'+self.addAgentFormModel.referralCode+'/superInfo'
                        }).then(function (res) {
                            if(res.data.retCode==0){
                                self.superAgenConfig = res.data.data;
@@ -729,6 +734,7 @@ export default {
                                    birthDay: self.addAgentFormModel.birthDay,
                                    userEngName: self.addAgentFormModel.userEngName,
                                    sex: self.addAgentFormModel.sex,
+                                   spell: self.addAgentFormModel.spell,
                                    agentLevel:superLevel,
                                    superAgentId:self.superAgenConfig.superAgentId,
                                    country: self.addAgentFormModel.country,
@@ -754,7 +760,7 @@ export default {
                                    }else {
                                        self.$message({
                                            type:'warning',
-                                           message:'添加代理失败',
+                                           message:'添加代理失败,失败原因:'+res.data.data.errMsg,
                                            showClose:true
                                        });
                                    }
@@ -809,7 +815,7 @@ export default {
             console.log(this.baseInfoAgentForm)
             this.$ajax({
                 method:'get',
-                url:'/user/'+row._id
+                url:'/other/user/'+row._id
             }).then(function (res) {
                 if(res.data.retCode==0){
                     const getUserList = res.data.data;
@@ -821,11 +827,17 @@ export default {
                         IDCardTail ='http://'+getUserList.IDCard.IDCardTailPic;
                     }
                     console.log(getUserList);
+
+                    if(getUserList.setUILocale === 'chinese' || getUserList.setUILocale === 'Chinese'){
+                        getUserList.setUILocale = "中文"
+                    }
+
                     self.baseInfoAgentForm = {
                         IDName:getUserList.IDCard.IDName,
                         IDNumber:getUserList.IDCard.IDNumber,
                         IDCardHeadPic:IDCardHead,
                         addressDetail:getUserList.addressDetail,
+                        spell:getUserList.spell,
                         IDCardTailPic:IDCardTail,
                         userEmail:getUserList.userEmail,
                         userEngName:getUserList.userEngName,
@@ -889,8 +901,10 @@ export default {
                 sex:self.baseInfoAgentForm.sex,
                 agentLevel:self.baseInfoAgentForm.agentLevel,
                 country:self.baseInfoAgentForm.country,
+                addressDetail:self.baseInfoAgentForm.addressDetail,
                 address:self.baseInfoAgentForm.address,
                 setUILocale:self.baseInfoAgentForm.setUILocale,
+                spell:self.baseInfoAgentForm.spell,
                 referralCode:self.baseInfoAgentForm.referralCode,
                 userPhone:self.baseInfoAgentForm.userPhone,
                 birthDay:self.moment(self.baseInfoAgentForm.birthDay).format('YYYY-MM-DD'),
@@ -977,6 +991,9 @@ export default {
 
         },
         changeAgentBankCard(index,row){
+            console.log('changeAgentBankCard row',row.userId);
+            this.bankCardHeadPicUpload = 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardHeadPic'+ row.userId + '?dir=ap-logo/&contentType=image/jpeg';
+            this.bankCardTailPicUpload = 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardTailPic'+ row.userId + '?dir=ap-logo/&contentType=image/jpeg';
             this.editVisibleIndex = index;
             this.bankCardPost.bankCardTailPic = row.bankCardTailPic;
             this.bankCardPost.bankCardHeadPic = row.bankCardHeadPic;
@@ -1110,7 +1127,8 @@ export default {
         },
         handleSuccessAgentBankTailPic(res,files){
             this.bankCardList[this.editVisibleIndex].bankCardTailPic = files.url;
-            this.bankCardPost.bankCardTailPic = files.response.data.fileName;
+            // this.bankCardPost.bankCardTailPic = files.response.data.fileName;
+            this.bankCardPost.bankCardTailPic = res.data;
         },
         handleChangAgentBankHeadPic(file){
             console.log("bankCardHeadPic")
@@ -1135,7 +1153,8 @@ export default {
             console.log('handleSuccessAgentBankHeadPic')
             console.log(files)
             this.bankCardList[this.editVisibleIndex].bankCardHeadPic = files.url;
-            this.bankCardPost.bankCardHeadPic = files.response.data.fileName;
+            // this.bankCardPost.bankCardHeadPic = files.response.data.fileName;
+            this.bankCardPost.bankCardHeadPic = res.data;
         },
         cancelAgentBankCark(index,row){
             console.log(row.userId);
@@ -1173,10 +1192,12 @@ export default {
             this.editVisibleIndex = null;
         },
         changeBalance(row) {
+            // console.log('调整金额',row);
             const self = this;
             self.changeBalanceVisible = true;
             self.changeBalanceForm.userId = row._id;
-            self.changeBalanceForm.Email = row.userEmail;
+            // self.changeBalanceForm.Email = row.userEmail;
+            self.changeBalanceForm.IDName = row.IDName;
             self.changeBalanceForm.Balance = row.money;
             self.changeBalanceForm.Count = '';
             self.changeBalanceForm.changeType = '';
@@ -1432,6 +1453,13 @@ export default {
                     type: 'error'
                 });
             })
+        },
+
+
+
+
+        handleCheckedCitiesChange(val){
+            console.log('handleCheckedCitiesChange',val)
         }
     },
 

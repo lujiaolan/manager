@@ -13,7 +13,7 @@
                               drag
                               :before-upload="beforeBankPicEditUpload"
                               :on-success="handleSuccessIDHeadPic"
-                              action="http://120.77.55.98:8080/crm/ap/img/upload"
+                              :action="IDCardHeadPicUpload"
                               :show-file-list="false"
                               multiple>
                               <i class="el-icon-upload" v-if="!imageUrl.imageIDHeadUrl"></i>
@@ -32,7 +32,7 @@
                               drag
                               :before-upload="beforeBankPicEditUpload"
                               :on-success="handleSuccessIDTailPic"
-                              action="http://120.77.55.98:8080/crm/ap/img/upload"
+                              :action="IDCardTailPicUpload"
                               :show-file-list="false"
                               multiple>
                               <i class="el-icon-upload" v-if="!imageUrl.imageIDTailUrl"></i>
@@ -54,7 +54,7 @@
                                drag
                                :before-upload="beforeBankPicEditUpload"
                                :on-success="handleSuccessBankHeadPic"
-                               action="http://120.77.55.98:8080/crm/ap/img/upload"
+                               :action="bankCardHeadPicUpload"
                                :show-file-list="false"
                                multiple>
                                <i class="el-icon-upload" v-if="!imageUrl.imageBankHeadUrl"></i>
@@ -75,7 +75,7 @@
                                drag
                                :before-upload="beforeBankPicEditUpload"
                                :on-success="handleSuccessBankTailPic"
-                               action="http://120.77.55.98:8080/crm/ap/img/upload"
+                               :action="bankCardTailPicUpload"
                                :show-file-list="false"
                                multiple>
                                <i class="el-icon-upload" v-if="!imageUrl.imageBankTailUrl"></i>
@@ -163,8 +163,8 @@
                     <el-col :span="6">
                         <el-form-item prop="birthDay" label="出生日期">
                             <el-date-picker
+                                :editable="editablePick"
                                 v-model="CRMAuditEdit.birthDay"
-                                type="date"
                                 placeholder="选择日期"
                                 >
                             </el-date-picker>
@@ -177,8 +177,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item prop="bankAddress" label="联系地址">
-                            <el-input v-model="CRMAuditEdit.bankAddress" @key.native.enter="saveCRMAuditEdit('CRMAuditEdit')"></el-input>
+                        <el-form-item prop="addressDetail" label="联系地址">
+                            <el-input v-model="CRMAuditEdit.addressDetail" @key.native.enter="saveCRMAuditEdit('CRMAuditEdit')"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-col>
@@ -213,9 +213,10 @@
 </script>
 <style scoped="" lang="less">
     .redirectHistory{
-        top: -25px;
+        top: -10px;
         left: -20px;
-        position: relative
+        position: relative;
+        cursor: pointer;
     }
     .fa-mail-reply-all{
         color: #00d1b2;

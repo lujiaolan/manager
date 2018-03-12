@@ -5,6 +5,7 @@ import $ from 'jquery';
 export default {
     data(){
         return {
+            widthDraw:this.$store.state.drawMoney.widthDraw,
             withdrawEditOrAdd:'',
             realStatusDisabled:false,
             outMoneyForm:{
@@ -255,6 +256,14 @@ export default {
                                showClose:true,
                                type:'info'
                            });
+                           if(postData.type===1) {
+                               self.widthDraw.outMoneyFlag = false;
+                           }else{
+                               self.widthDraw.outMoneyFlag = true;
+                           }
+                           self.$store.dispatch('update_withDraw',{
+                               outMoneyFlag:self.widthDraw.outMoneyFlag,
+                           })
                            self.getWithdrawConfig();
                            self.getWithdrawRealTimeRate();
                        }else{
@@ -279,6 +288,18 @@ export default {
         getWithdrawConfig(){
             const apID = this.$store.state.domain.domain.domain.apId;
             const self = this;
+            console.log('this.$store.state.drawMoney.drawMoney.outMoneyFlag')
+            console.log(this.$store.state.drawMoney.widthDraw.outMoneyFlag);
+            if(this.$store.state.drawMoney.widthDraw.outMoneyFlag){
+                this.typeOutSelect.resetMoneyColor.display='block';
+                this.typeOutSelect.resetNumColor.display='none';
+                this.outMoneyForm.type = 2;
+            }else{
+                this.typeOutSelect.resetMoneyColor.display='none';
+                this.typeOutSelect.resetNumColor.display='block';
+
+                this.outMoneyForm.type = 1;
+            }
             this.$ajax({
                 url:'/'+apID+'/2/financialRule',
                 method:'get'

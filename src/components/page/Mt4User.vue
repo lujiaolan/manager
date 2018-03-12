@@ -1,11 +1,23 @@
 <template>
     <div class="crmAgent">
         <div class="handle-box">
-            <el-input v-model.number="searchMT4List.mt4UserId" placeholder="MT4账户" class="handle-input mr10"></el-input>
-            <el-input v-model="searchMT4List.mt4UserNameLike" placeholder="邮箱/姓名" class="handle-input mr10"></el-input>
-            <el-button type="primary" @click="mt4UserList">查询</el-button>
-            <el-button type="primary" @click="syncMT4Visible"  v-loading="MT4Loading" :disabled="MT4SyncDisabled">同步账户</el-button>
-            <el-button type="primary" @click="createMT4">创建MT4</el-button>
+            <el-form class="outMoneyMarginR20">
+                <el-form-item>
+                    <el-input v-model.number="searchMT4List.mt4UserId" placeholder="MT4账户" class="handle-input mr10"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="searchMT4List.mt4UserNameLike" placeholder="邮箱/姓名" class="handle-input mr10"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="mt4UserList">查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="syncMT4Visible"  v-loading="MT4Loading" :disabled="MT4SyncDisabled">同步账户</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="createMT4">创建MT4</el-button>
+                </el-form-item>
+            </el-form>
         </div>
         <el-table :data="tableData" ref="multipleMT4" @selection-change="handleSelectionChange" border style="width: 100%">
             <el-table-column prop="mt4UserId" label="MT4账户" width="95"></el-table-column>
@@ -78,7 +90,8 @@
                 <el-col :span="24">
                     <el-col :span="10">
                         <el-form-item  label="姓名：" prop="IDName">
-                            <el-input v-model="changeAttributeForm.IDName" @key.native.enter="changeAttributeS('changeAttributeForm')">
+                            <el-input v-model="changeAttributeForm.IDName"
+                                      :disabled="changeAttributeDisAble" @key.native.enter="changeAttributeS('changeAttributeForm')">
                             </el-input>
                         </el-form-item>
                     </el-col>
@@ -100,8 +113,8 @@
                        </el-form-item>
                    </el-col>
                    <el-col :span="14">
-                       <el-form-item   label="邮箱：" prop="UserIRD">
-                           <el-input v-model="changeAttributeForm.UserIRD" placeholder="请输入邮箱"
+                       <el-form-item   label="邮箱：" prop="UserEmail">
+                           <el-input v-model="changeAttributeForm.UserEmail" placeholder="请输入邮箱"
                                      @key.native.enter="changeAttributeS('changeAttributeForm')"
                                      :disabled="userEmailAble"></el-input>
                        </el-form-item>
@@ -114,12 +127,11 @@
                        </el-form-item>
                    </el-col>
                    <el-col :span="14">
-                       <el-form-item   label="是否禁用：" prop="UserEnableStatus">
-                           <el-radio-group v-model="changeAttributeForm.UserEnable">
-                               <el-radio :label="0">禁用</el-radio>
-                               <el-radio :label="1" >正常</el-radio>
-                           </el-radio-group>
+                       <el-form-item label="证件号码:" prop="UserIRD">
+                           <el-input v-model="changeAttributeForm.UserIRD"
+                                     :disabled="disabledUserIRD" placeholder="请输入证件号码"></el-input>
                        </el-form-item>
+
                    </el-col>
                </el-col>
                <el-col :span="24">
@@ -132,11 +144,18 @@
                      </el-form-item>
                  </el-col>
                    <el-col :span="14">
-                       <el-form-item  >
-                           <el-button @click="changeAttrCancel">关 闭</el-button>
-                           <el-button type="primary" @click="changeAttributeS('changeAttributeForm')">确 定</el-button>
+                       <el-form-item   label="是否禁用：" prop="UserEnableStatus">
+                           <el-radio-group v-model="changeAttributeForm.UserEnable">
+                               <el-radio :label="0">禁用</el-radio>
+                               <el-radio :label="1" >正常</el-radio>
+                           </el-radio-group>
                        </el-form-item>
+
                    </el-col>
+                   <el-form-item  >
+                       <el-button @click="changeAttrCancel">关 闭</el-button>
+                       <el-button type="primary" @click="changeAttributeS('changeAttributeForm')">确 定</el-button>
+                   </el-form-item>
                </el-col>
             </el-form>
 
@@ -161,11 +180,6 @@
                 </el-col>
                   <el-col :span="24">
                       <el-col :span="10">
-                          <el-form-item  label="主密码：" prop="UserPwd">
-                              <el-input v-model="addMt4Form.UserPwd" @key.native.enter="addMT4('addMt4Form')"></el-input>
-                          </el-form-item>
-                      </el-col>
-                      <el-col :span="14">
                           <el-form-item label="选择MT4分组：" prop="UserGroupName">
                               <el-select v-model="addMt4Form.UserGroupName">
                                   <el-option :value="groud" :key="groud" :label="groud" v-for="groud in groudMT4List"
@@ -173,18 +187,24 @@
                               </el-select>
                           </el-form-item>
                       </el-col>
+                      <el-col :span="14">
+                          <el-form-item  label="杠杆比例：" prop="UserLeverage">
+                              <el-select v-model="addMt4Form.UserLeverage">
+                                  <el-option :value="lever" :key="lever" :label="'1:'+lever" v-for="lever in leverList"></el-option>
+                              </el-select>
+                          </el-form-item>
+
+                      </el-col>
                   </el-col>
                   <el-col :span="24">
                       <el-col :span="10">
-                          <el-form-item  label="杠杆比例：" prop="UserLeverage">
-                              <el-select v-model="addMt4Form.UserLeverage">
-                                  <el-option :value="lever.value" :key="lever.value" :label="lever.label" v-for="lever in leverList"></el-option>
-                              </el-select>
+                          <el-form-item label="姓名：" prop="IDName">
+                              <el-input v-model="addMt4Form.IDName" placeholder="请输入姓名"></el-input>
                           </el-form-item>
                       </el-col>
                       <el-col :span="14">
-                          <el-form-item label="姓名：" prop="IDName">
-                              <el-input v-model="addMt4Form.IDName" placeholder="请输入姓名"></el-input>
+                          <el-form-item label="证件号码:" prop="UserIRD">
+                              <el-input v-model="addMt4Form.UserIRD"  @key.native.enter="addMT4('addMt4Form')"></el-input>
                           </el-form-item>
                       </el-col>
                   </el-col>
@@ -197,6 +217,18 @@
                        <el-col :span="14">
                            <el-form-item  label="手机：" prop="UserPhone">
                                <el-input v-model="addMt4Form.UserPhone" placeholder="请输入手机号"></el-input>
+                           </el-form-item>
+                       </el-col>
+                   </el-col>
+                   <el-col :span="24">
+                       <el-col :span="10">
+                           <el-form-item  label="主密码：" prop="UserPwd">
+                               <el-input v-model="addMt4Form.UserPwd" @key.native.enter="addMT4('addMt4Form')"></el-input>
+                           </el-form-item>
+                       </el-col>
+                       <el-col :span="10">
+                           <el-form-item  label="观摩密码：" prop="UserInvestorpwd">
+                               <el-input v-model="addMt4Form.UserInvestorpwd" @key.native.enter="addMT4('addMt4Form')"></el-input>
                            </el-form-item>
                        </el-col>
                    </el-col>
@@ -218,9 +250,12 @@
                 <el-form-item  label="邮箱：" prop="UserEmail">
                    <el-input v-model="addMt4FormSame.UserEmail" disabled=""></el-input>
                 </el-form-item>
-                <!--<el-form-item label="姓名：" prop="IDName">-->
-                    <!--<el-input v-model="addMt4FormSame.IDName"></el-input>-->
-                <!--</el-form-item>-->
+                <el-form-item label="姓名：" prop="IDName">
+                    <el-input v-model="addMt4FormSame.IDName" disabled=""></el-input>
+                </el-form-item>
+                <el-form-item label="证件号码:" prop="">
+                    <el-input v-model="addMt4FormSame.UserIRD" disabled="" placeholder="请输入证件号码"></el-input>
+                </el-form-item>
                 <el-form-item label="选择MT4分组：" prop="UserGroupName">
                     <el-select v-model="addMt4FormSame.UserGroupName">
                         <el-option :value="groud" :key="groud" :label="groud" v-for="groud in groudMT4List"
@@ -235,8 +270,12 @@
                                    @key.native.enter="adddSameMT4('addMt4FormSame')"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item  label="密码：" prop="UserPwd">
-                    <el-input v-model="addMt4FormSame.UserPwd" placeholder="6位以上英文字母加数字"
+                <el-form-item  label="主密码：" prop="UserPwd">
+                    <el-input v-model="addMt4FormSame.UserPwd" placeholder="6位以上英文字母+数字"
+                              @key.native.enter="adddSameMT4('addMt4FormSame')"></el-input>
+                </el-form-item>
+                <el-form-item  label="观摩密码：" prop="UserInvestorpwd">
+                    <el-input v-model="addMt4FormSame.UserInvestorpwd" placeholder="6位以上英文字母+数字"
                               @key.native.enter="adddSameMT4('addMt4FormSame')"></el-input>
                 </el-form-item>
                 <el-form-item>

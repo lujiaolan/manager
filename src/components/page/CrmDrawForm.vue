@@ -1,7 +1,7 @@
 <template>
     <div class="crmAgent">
         <div class="handle-box">
-            <el-form :model="outMoney" :rules="outMoney_rules" ref="outMoney">
+            <el-form :model="outMoney" :rules="outMoney_rules" ref="outMoney" class="outMoneyMarginR20">
                 <el-form-item prop="orderNum">
                     <el-input v-model="outMoney.orderNum" placeholder="订单编号" class="handle-input mr10"></el-input>
                 </el-form-item>
@@ -17,6 +17,7 @@
                     <el-date-picker
                         v-model="outMoney.startTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -24,6 +25,7 @@
                     <el-date-picker
                         v-model="outMoney.endTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>
@@ -70,16 +72,4 @@
     module.exports = require('../pageJS/CrmDrawForm')
 </script>
 <style lang="less" scoped="">
-    .crmAgent {
-        .textarea110{
-            width: 110%;
-        }
-    }
-    .crmAgent {
-        .handle-box{
-            .el-form-item{
-                margin-left: 10px;
-            }
-        }
-    }
 </style>

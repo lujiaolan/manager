@@ -15,7 +15,9 @@ export default {
                 openProtocolContent:this.$store.state.domain.domain.domain.openProtocolContent,
                 riskDisclosureContent:this.$store.state.domain.domain.domain.riskDisclosureContent,
                 disclaimerContent:this.$store.state.domain.domain.domain.disclaimerContent,
-                apId:this.$store.state.user.userinfo.apId
+                apId:this.$store.state.user.userinfo.apId,
+                leverConfig:'',
+                mt4DepositAmount:this.$store.state.domain.domain.domain.mt4DepositAmount
             },
             styleObject:{
                 openProtocolColor:{
@@ -80,13 +82,68 @@ export default {
                             }
                         }
                     }
+                ],
+                mt4DepositAmount:[
+                    {
+                        required:false,
+                        trigger:'blur',
+                        validator:(rules,value,callback)=>{
+                            if(typeof value=='number'){
+                                callback()
+                            }else{
+                                callback(new Error('请输入数字'))
+                            }
+                        }
+                    }
                 ]
             }
         }
     },
+    // watch:{
+    //   'openAcountForm.leverConfig':function (val) {
+    //       console.log('openAcountForm.leverConfig')
+    //
+    //        val=val.split(",");
+    //       for(let i=0;i<val.length;i++){
+    //           console.log(val)
+    //           if(/^[1-9]\d*$/.test(val[i])){
+    //               this.checkLever = true;
+    //               console.log(this.checkLever)
+    //           }else{
+    //               this.checkLever = false;
+    //               console.log(this.checkLever)
+    //
+    //           }
+    //       }
+    //       console.log(val)
+    //   }
+    // },
     methods: {
         saveOpenAcountBox(ref){
-            console.log(this.openAcountForm);
+            console.log('this.openAcountForm.leverConfig');
+            console.log(this.openAcountForm.leverConfig);
+            let leverList = [];
+            let lever = this.openAcountForm.leverConfig;
+            lever=lever.split(",");
+            for(let i=0;i<lever.length;i++){
+                if(lever[i]){
+                    leverList.push(lever[i])
+                }
+            }
+            console.log(leverList)
+            const postData = {
+                openAccountType:this.openAcountForm.openAccountType,
+                demoMt4Status:this.openAcountForm.demoMt4Status,
+                openProtocol:this.openAcountForm.openProtocol,
+                riskDisclosure:this.openAcountForm.riskDisclosure,
+                disclaimer:this.openAcountForm.disclaimer,
+                openProtocolContent:this.openAcountForm.openProtocolContent,
+                riskDisclosureContent:this.openAcountForm.riskDisclosureContent,
+                disclaimerContent:this.openAcountForm.disclaimerContent,
+                apId:this.openAcountForm.apId,
+                leverConfig:leverList,
+                mt4DepositAmount:this.openAcountForm.mt4DepositAmount
+            };
             const self = this;
             this.$refs[ref].validate((valid)=>{
                 if(valid){
@@ -97,8 +154,8 @@ export default {
                     }).then(()=>{
                         self.$ajax({
                             method:'post',
-                            url:'/openAccountControl/add',
-                            data:this.openAcountForm
+                            url:'/ap/openAccountControl/add',
+                            data:postData
                         }).then(function (res) {
                             if(res.data.retCode==0){
                                 self.OpenEditOrSave = '修改';
@@ -106,7 +163,8 @@ export default {
                                     type:'info',
                                     message:'编辑成功',
                                     showClose:true
-                                })
+                                });
+                               self.getApId();
                             }else{
                                 self.$message({
                                     type:'warning',
@@ -116,6 +174,7 @@ export default {
                             }
 
                         }).catch(function (err) {
+                            console.log(err)
                             self.$message({
                                 type:'error',
                                 message:'网络错误',
@@ -134,6 +193,29 @@ export default {
                 }
             })
 
+        },
+        getApId(){
+            const self = this;
+            let URL =  document.location.origin;
+            const postData = {
+                domain:URL,
+                type:'apManager',
+            };
+            console.log('postData')
+            console.log(postData)
+            this.$ajax({
+                method: 'post',
+                data:postData,
+                url:'/other/ap/getApId'
+            }).then(function (res) {
+                console.log(res)
+                console.log(res.data.data)
+                self.$store.dispatch('update_domain',res.data.data)
+
+            }).catch(function (err) {
+                console.log("getApId")
+                console.log(err)
+            })
         },
         riskDisclosureOnUpload(file){
             console.log('file.size')
@@ -162,7 +244,7 @@ export default {
                 console.log("formData type")
                 console.log(formData)
                 this.$ajax({
-                    url:'http://120.77.55.98:8080/crm/ap/img/upload',
+                    url:'/ap/img/upload',
                     method:'post',
                     data:formData
                 }).then(function (res) {
@@ -195,7 +277,7 @@ export default {
                 return this.$message.error('上传头像图片大小不能超过 2MB!');
             }else {
                 this.$ajax({
-                    url:'http://120.77.55.98:8080/crm/ap/img/upload',
+                    url:'/ap/img/upload',
                     method:'post',
                     data:formData
                 }).then(function (res) {
@@ -228,7 +310,7 @@ export default {
                 return this.$message.error('上传头像图片大小不能超过 2MB!');
             }else {
                 this.$ajax({
-                    url:'http://120.77.55.98:8080/crm/ap/img/upload',
+                    url:'/ap/img/upload',
                     method:'post',
                     data:formData
                 }).then(function (res) {
@@ -244,7 +326,17 @@ export default {
     },
     mounted(){
         console.log('修改')
-        console.log(this.$store.state.domain.domain.domain)
+        console.log(this.$store.state.domain.domain.domain.leverConfig)
+        if(this.$store.state.domain.domain.domain.leverConfig){
+            for(let i=0;i<this.$store.state.domain.domain.domain.leverConfig.length;i++){
+                if(i===this.$store.state.domain.domain.domain.leverConfig.length-1){
+                    this.openAcountForm.leverConfig = this.openAcountForm.leverConfig+this.$store.state.domain.domain.domain.leverConfig[i];
+                }else{
+                    this.openAcountForm.leverConfig = this.openAcountForm.leverConfig+this.$store.state.domain.domain.domain.leverConfig[i]+',';
+                }
+
+            }
+        }
         if(this.$store.state.domain.domain.domain.openProtocolContent){
            this.OpenEditOrSave = '修改';
            this.styleObject.openProtocolColor.color = 'transparent';

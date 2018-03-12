@@ -14,7 +14,7 @@
                             <i :class="'icon '+route.icon"></i>
                             <span :class="'text '+route.icon">{{route.name}}</span>
                         </template>
-                        <el-menu-item :index="item.path" v-for="(item, index ) in route.children" v-if="!item.hidden" :key="item.path">
+                        <el-menu-item :index="item.path" v-for="(item, index ) in route.children" v-if="!item.hidden" :key="item.path" @click="testSidebar">
                             <i :class="item.icon"></i>
                             <span>{{ item.name }}</span>
                         </el-menu-item>
@@ -31,7 +31,9 @@
 
     export default {
         data() {
-            return {}
+            return {
+                DataAuditVisible: false
+            }
         },
         methods:{
             singOut(){
@@ -40,12 +42,11 @@
                     confirmButtonText:'确定',
                     cancelButtonText:'取消'
                 }).then(()=>{
-                    this.$router.push('/login');
                     this.$ajax({
-                        method: get,
+                        method: 'get',
                         url: '/logout/' + self.$store.state.user.userinfo.userId
                     }).then(function (res) {
-
+                        self.$router.push('/login');
                     }).catch(function () {
 
                     });
@@ -54,7 +55,28 @@
 
                 })
 
+            },
+
+            testSidebar(){
+//                const self = this;
+                console.log(this.$route.path);
+                console.log(this.$route.matched);
+                console.log(this.$route);
+                if(this.$route.path === '/DataAudit'){
+                    this.$store.dispatch('update_tab_active','first');
+                }
+//                if( this.$route.path === '/DataAudit/RegisterList' ||
+//                    this.$route.path === '/DataAudit/CrmAudit' ||
+//                    this.$route.path === '/DataAudit/BankCardAudit' ||
+//                    this.$route.path === '/DataAudit/LeverageAudit'){
+//                    self.DataAuditVisible = true;
+//                }else {
+//                    self.DataAuditVisible = false;
+//                }
             }
+        },
+        mounted(){
+//            this.testSidebar()
         }
     }
 </script>
@@ -90,6 +112,12 @@
     }
     .signout:hover{
         color:#20a0ff;
+    }
+
+    .sidebar .el-menu--horizontal.el-menu--dark
+    .sidebar .el-submenu .el-menu-item.isActive,
+    .sidebar .el-menu-item.isActive {
+        color: #20a0ff;
     }
 
 </style>

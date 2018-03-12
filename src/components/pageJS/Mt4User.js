@@ -1,11 +1,16 @@
 export default {
     data() {
+        let arg1 = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/;
+        //18位数身份证正则表达式
+        let arg2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[a-zA-Z])$/;
         return {
             MT4Loading:false,
+            changeAttributeDisAble:false,
             MT4SyncDisabled:false,
             totalMyInfo:null,
             accountTypeDisabled:false,
             userEmailAble:true,
+            disabledUserIRD:true,
             multipleMT4:[],
             addMT4Visible: false,
             addMT4SameVisible: false,
@@ -20,6 +25,7 @@ export default {
             addMt4FormSame:{
                 apId: '',
                 IDName:'',
+                UserIRD:'',
                 accountType:'' ,
                 UserID: null,
                 UserPhone: '',
@@ -27,7 +33,8 @@ export default {
                 UserComment: '',
                 UserLeverage: '',
                 UserGroupName: '',
-                UserPwd: ''
+                UserPwd: '',
+                UserInvestorpwd:''
             },
 
             resetMT4PwdData:{
@@ -54,44 +61,12 @@ export default {
                     value:'0',
                     label:'标准账户'
                 }],
-            leverList:[
-                {
-                    value:10,
-                    label:'1:10'
-                },
-                {
-                    value:20,
-                    label:'1:20'
-                },
-                {
-                    value:50,
-                    label:'1:50'
-                },
-                {
-                    value:100,
-                    label:'1:100'
-                },
-                {
-                    value:200,
-                    label:'1:200'
-                },
-                {
-                    value:400,
-                    label:'1:400'
-                },
-                {
-                    value:500,
-                    label:'1:500'
-                },
-                {
-                    value:800,
-                    label:'1:800'
-                }
-            ],
+            leverList:[],
             groudMT4List:[],
             addMt4Form: {
                 apId: this.$store.state.domain.domain.domain.apId,
                 IDName:'',
+                UserIRD:'',
                 accountType:'realTransferRules' ,
                 UserID: '',
                 UserPhone: '',
@@ -99,19 +74,36 @@ export default {
                 UserEmail: '',
                 UserComment: '',
                 UserLeverage: '',
-                UserSendreports: 1,
                 UserGroupName: '',
-                UserPwd: 'qwe123'
+                UserPwd: 'qwe123',
+                UserInvestorpwd:'qwe123'
             },
             addMt4FormSameRules:{
                 UserPwd: [
                     {
-                        required: false,
+                        required: true,
                         validator:(rules,value,callback)=>{
-                            if(value==''){
-                                callback(new Error('请输入密码'))
+                            if(value==''||value==null){
+                                callback(new Error('请输入主密码'))
                             }else {
-                                if(/^(\w){6,20}$/.test(value)){
+                                if(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,10}$/.test(value)){
+                                    callback()
+                                }else{
+                                    callback(new Error('请输入6-20个字母或数字组成的密码'))
+                                }
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                UserInvestorpwd: [
+                    {
+                        required: true,
+                        validator:(rules,value,callback)=>{
+                            if(value==''||value==null){
+                                callback(new Error('请输入观摩密码'))
+                            }else {
+                                if(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,10}$/.test(value)){
                                     callback()
                                 }else{
                                     callback(new Error('请输入6-20个字母或数字组成的密码'))
@@ -172,17 +164,64 @@ export default {
                         },
                         trigger: 'blur',
                     }
-                ]
-            },
-            addMT4Rules: {
-                UserPwd: [
+                ],
+                UserIRD: [
                     {
                         required: false,
                         validator:(rules,value,callback)=>{
                             if(value==''){
-                                callback(new Error('请输入密码'))
+                                callback()
+                            }  else{
+                                if( value.match(arg1) == null && value.match(arg2) == null){
+                                    callback(new Error('身份证格式错误,请重新输入'))
+                                }else{
+                                    callback();
+                                }
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            },
+            addMT4Rules: {
+                accountType:[
+                    {
+                        required: true,
+                        validator:(rules,value,callback)=>{
+                            if(value==''||value==null){
+                                callback(new Error('请选择账户属性'))
                             }else {
-                                if(/^(\w){6,20}$/.test(value)){
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                UserPwd: [
+                    {
+                        required: true,
+                        validator:(rules,value,callback)=>{
+                            if(value==''||value==null||value===undefined){
+                                callback(new Error('请输入主密码'))
+                            }else {
+                                if(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(value)){
+                                    callback()
+                                }else{
+                                    callback(new Error('请输入6-20个字母或数字组成的密码'))
+                                }
+                            }
+                        },
+                      trigger: 'blur'
+                    }
+                ],
+                UserInvestorpwd: [
+                    {
+                        required: true,
+                        validator:(rules,value,callback)=>{
+                            if(value==''||value==null||value===undefined){
+                                callback(new Error('请输入主密码'))
+                            }else {
+                                if(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(value)){
                                     callback()
                                 }else{
                                     callback(new Error('请输入6-20个字母或数字组成的密码'))
@@ -207,7 +246,7 @@ export default {
                 ],
                 UserGroupName: [
                     {
-                        required: false,
+                        required: true,
                         validator:(rules,value,callback)=>{
                             if(value==''){
                                 callback(new Error('请选择分组'))
@@ -220,7 +259,7 @@ export default {
                 ],
                 UserLeverage: [
                     {
-                        required: false,
+                        required: true,
                         validator:(rules,value,callback)=>{
                             if(value==''||value==undefined){
                                 callback(new Error('请选择杠杆比例'))
@@ -252,7 +291,7 @@ export default {
                               if(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)){
                                   this.$ajax({
                                       method:'post',
-                                      url:'/user/dumpRepeat',
+                                      url:'/other/user/dumpRepeat',
                                       data:{
                                           apId:this.$store.state.domain.domain.domain.apId,
                                           userEmail:value
@@ -286,7 +325,7 @@ export default {
                                 if(/^1[3,4,5,7,8]\d{9}$/.test(value)){
                                     this.$ajax({
                                         method:'post',
-                                        url:'/user/dumpRepeat',
+                                        url:'/other/user/dumpRepeat',
                                         data:{
                                             apId:this.addMt4Form.apId,
                                             userPhone:value
@@ -308,6 +347,23 @@ export default {
                         },
                         trigger: 'blur' }
                 ],
+                UserIRD: [
+                    {
+                        required: false,
+                        validator:(rules,value,callback)=>{
+                            if(value==''){
+                                callback()
+                            }  else{
+                                if( value.match(arg1) == null && value.match(arg2) == null){
+                                    callback(new Error('身份证格式错误,请重新输入'))
+                                }else{
+                                    callback();
+                                }
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
             },
             syncForm:{
                 chooseValue: '',
@@ -326,7 +382,8 @@ export default {
                 UserLoginID:null,
                 UserGroupName:'',
                 UserLeverage:null,
-                UserIRD:null,
+                UserIRD:'',
+                UserEmail:'',
                 UserPhone:'',
                 UserEnable:null,
                 UserEnableReadonly:null,
@@ -361,7 +418,7 @@ export default {
                 AdminTip: '',
             },
             changeAttributeRules:{
-                UserIRD: [
+                UserEmail: [
                     {
                         required: false,
                         validator:(rules,value,callback)=>{
@@ -372,7 +429,7 @@ export default {
                                     if(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)){
                                         this.$ajax({
                                             method:'post',
-                                            url:'/user/dumpRepeat',
+                                            url:'/other/user/dumpRepeat',
                                             data:{
                                                 apId:this.$store.state.domain.domain.domain.apId,
                                                 userEmail:value
@@ -402,7 +459,7 @@ export default {
                         require:false,
                         validator:(rules,value,callback)=>{
                             if(value==''||value==null||value==undefined){
-                                callback(new Error('请选择账户属性'))
+                              callback()
                             }else{
                                 callback()
                             }
@@ -423,7 +480,7 @@ export default {
                                         if(/^1[3,4,5,7,8]\d{9}$/.test(value)){
                                             this.$ajax({
                                                 method:'post',
-                                                url:'/user/dumpRepeat',
+                                                url:'/other/user/dumpRepeat',
                                                 data:{
                                                     apId:this.changeAttributeForm.apId,
                                                     userPhone:value
@@ -448,6 +505,23 @@ export default {
                             }
                         },
                         trigger: 'blur' }
+                ],
+                UserIRD:[
+                    {
+                        required: false,
+                        validator:(rules,value,callback)=>{
+                            if(value==''){
+                                callback()
+                            }  else{
+                                if( value.match(arg1) == null && value.match(arg2) == null){
+                                    callback(new Error('身份证格式错误,请重新输入'))
+                                }else{
+                                    callback();
+                                }
+                            }
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             }
         }
@@ -480,21 +554,11 @@ export default {
             }).then(function (res) {
                 if(res.data.retCode==0){
                     console.log(res)
-                    if(self.addMt4Form.accountType=='agentAccountRules'){
-                        if(res.data.data.agentAccountRulesMaxNum){
-                            self.addMt4Form.UserID = res.data.data.agentAccountRulesMaxNum+1;
-                        }else{
-                            self.addMt4Form.UserID = null;
-                        }
-
-                    }else if(self.addMt4Form.accountType== 'realTransferRules'){
-                       if(res.data.data.realTransferRulesMaxNum){
-                           self.addMt4Form.UserID = res.data.data.realTransferRulesMaxNum+1;
-                       }else{
-                           self.addMt4Form.UserID = null;
-                       }
+                    if(res.data.data.MaxNum){
+                        self.addMt4Form.UserID = res.data.data.MaxNum+1;
+                    }else{
+                        self.addMt4Form.UserID= null;
                     }
-                    console.log(self.addMt4Form.UserID)
 
                 }
             }).catch(function (err) {
@@ -518,15 +582,17 @@ export default {
         addMT4(ref){
             const self = this;
             console.log(this.addMt4Form)
+            this.addMt4Form.UserLeverage = parseInt(this.addMt4Form.UserLeverage)
             this.$refs[ref].validate((valid)=>{
                 if(valid){
                     self.$ajax({
-                        url:'http://120.77.234.9:8080/crm/mt4/add',
+                        url:'/mt4/add',
                         method:'post',
                         data:this.addMt4Form
                     }).then(function (res) {
+                        console.log(res)
                         if(res.data.retCode==0){
-                            console.log(res)
+
                             self.$message({
                                 message:'申请成功,账户为:'+res.data.data.mt4UserId,
                                 showClose:true,
@@ -536,8 +602,9 @@ export default {
                                 self.mt4UserList();
                                 self.$refs[ref].resetFields();
                         }else{
+
                             self.$message({
-                                message:'申请失败',
+                                message:'申请失败,错误原因:'+res.data.data.errMsg,
                                 showClose:true,
                                 type:'warning'
                             });
@@ -582,7 +649,7 @@ export default {
                             self.$refs[ref].resetFields();
                         }else{
                             self.$message({
-                                message:'申请失败',
+                                message:'申请失败,失败原因:'+res.data.data.errMsg,
                                 type:'warning',
                                 showClose:true
                             });
@@ -689,16 +756,26 @@ export default {
             }).then(function (res) {
                 if(res.data.retCode==0){
                     self.$message({
-                        message:'修改成功,请查收邮箱',
+                        // message:'修改成功,请查收邮箱',
+                        message:'邮件发送成功，请注意查收',
                         type:'info',
                         showClose:true
                     });
                     self.resetPwdVisible = false;
                     self.mt4UserList();
-
+                }else if(res.data.retCode==1){
+                    self.$message({
+                        // message:'修改成功,请查收邮箱',
+                        message:'操作成功，请稍后查收邮件',
+                        type:'info',
+                        showClose:true
+                    });
+                    self.resetPwdVisible = false;
+                    self.mt4UserList();
                 }else{
                     self.$message({
-                        message:'修改失败',
+                        // message:'修改失败',
+                        message:'操作失败，请稍后再试',
                         type:'warning',
                         showClose:true
                     })
@@ -736,6 +813,11 @@ export default {
             }else {
                 this.userEmailAble = false;
             }
+            if(row.UserIRD){
+                this.disabledUserIRD = true;
+            }else{
+                this.disabledUserIRD = false;
+            }
             this.getApGroupList();
             if(row.accountType=='realTransferRules'){
                 this.accountTypeDisabled = true;
@@ -752,11 +834,19 @@ export default {
                 UserLoginID:row.mt4UserId,
                 UserGroupName:row.UserGroupName,
                 UserLeverage:row.UserLeverage,
-                UserIRD:row.UserEmail,
+                UserEmail:row.UserEmail,
+                UserIRD:row.UserIRD,
                 UserPhone:row.UserPhone,
                 UserEnable:row.UserEnable,
                 UserEnableReadonly:row.UserEnableReadonly,
             }
+            if(row.UserEmail){
+               this. changeAttributeDisAble=true;
+            }else{
+                this. changeAttributeDisAble = false;
+            }
+            console.log('this.changeAttributeForm')
+            console.log(this.changeAttributeForm)
         },
         changeAttributeS(ref){
             const self = this;
@@ -778,6 +868,7 @@ export default {
                 UserEnableReadonly:this.changeAttributeForm.UserEnableReadonly,
                 role:role
             };
+
             this.$refs[ref].validate((valid)=>{
                 if(valid){
                     self.$ajax({
@@ -843,6 +934,23 @@ export default {
             this.addMT4Visible = true;
             this.getApGroupList();
             this.getMt4MaxAccount();
+            this.getMt4Lever();
+        },
+        getMt4Lever(){
+            const self = this;
+            this.$ajax({
+                method:'get',
+                url:'/ap/mt4Config/'+this.$store.state.domain.domain.domain.apId+'/mt4Info'
+            }).then(function (res) {
+                console.log(res)
+                if (res.data.retCode===0){
+                    self.leverList = res.data.data.leverConfig;
+                }else{
+                    self.leverList = ['无数据']
+                }
+            }).catch(function (err) {
+                self.leverList = ['无数据']
+            })
         },
         sigleSyncMt4(row){
             const self = this;
@@ -895,27 +1003,70 @@ export default {
             const self = this;
             this.$ajax({
                 method:'get',
-                url:'/mt4User/'+row.userId+'/canApplyMt4',
+                url:'/user/'+row.userId+'/verifyStatus',
             }).then(function (res) {
-                if(res.data.retCode==0){
-                    self.canApplyMt4 = 5 - res.data.data.mt4UserNumber;
-                    self.getApGroupList();
-                    self.addMt4FormSame = {
-                        userId:row.userId,
-                        UserEmail:row.UserEmail,
-                        UserGroupName:row.UserGroupName,
-                        // IDName:row.IDName,
-                        UserLeverage:row.UserLeverage,
-                        UserPwd:'',
-                        apId:row.apId
-                    };
-                    self.addMT4SameVisible = true;
+                if(res.data.retCode===0){
+                    console.log(res)
+                    if(res.data.data.verifyStatus===0){
+                        self.$message({
+                            message:'该账户信息未审核,请审核该账户',
+                            showClose:true,
+                            type:'warning'
+                        })
+                    }
+                    else if(res.data.data.verifyStatus===1){
+                        self.$ajax({
+                            method:'get',
+                            url:'/mt4User/'+row.userId+'/canApplyMt4',
+                        }).then(function (res) {
+                            if(res.data.retCode==0){
+                                console.log(res)
+                                self.canApplyMt4 = 5 - res.data.data.mt4UserNumber;
+                                self.getApGroupList();
+                                self.addMt4FormSame = {
+                                    userId:row.userId,
+                                    UserEmail:row.UserEmail,
+                                    UserGroupName:row.UserGroupName,
+                                    IDName:row.IDName,
+                                    UserLeverage:row.UserLeverage,
+                                    UserPwd:'',
+                                    UserInvestorpwd:'',
+                                    UserIRD:row.UserIRD,
+                                    apId:row.apId
+                                };
+                                self.addMT4SameVisible = true;
+                            }else{
+                                self.$message({
+                                    message:'同名账户已经达到最大限制',
+                                    type:'warning',
+                                    showClose:true
+                                })
+                            }
+                        }).catch(function (err) {
+                            self.$message({
+                                message:'网络错误',
+                                type:'error',
+                                showClose:true
+                            })
+                        })
+                    }
+                    else if(res.data.data.verifyStatus===-1){
+                        self.$message({
+                            message:'该账户信息未上转,请通知账户上传资料',
+                            showClose:true,
+                            type:'warning'
+                        })
+                    }
+                    else if(res.data.data.verifyStatus===2){
+                        self.$message({
+                            message:'该账户审核失败,请通知账户上传资料',
+                            showClose:true,
+                            type:'warning'
+                        })
+                    }
                 }else{
-                    self.$message({
-                        message:'同名账户已经达到最大限制',
-                        type:'warning',
-                        showClose:true
-                    })
+                    console.log(res)
+
                 }
             }).catch(function (err) {
                 self.$message({
@@ -941,17 +1092,6 @@ export default {
                        // apGroupList.push(res.data.data);
                    }
                })
-               this.$ajax({
-                   method:'get',
-                   url:'/ap/group/default/'+this.$store.state.domain.domain.domain.apId,
-               }).then(function (res) {
-                   if(res.data.retCode===0){
-                       console.log(res.data.data)
-                       apGroupList.push(res.data.data);
-
-                   }
-               })
-
         }
             this.groudMT4List = apGroupList;
            console.log('apGroupList')

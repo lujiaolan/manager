@@ -184,7 +184,7 @@ a{text-decoration: none}
 
 /*CrmAgent start*/
 .handle-box{
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
     overflow: hidden;
 }
 .handle-select{
@@ -273,7 +273,7 @@ a{text-decoration: none}
 }
 .varietyName > span {
     display: inline-block;
-    width: 76px;
+    width: 90px;
 }
 .typeInfo,
 .typeInfo__inner,
@@ -282,14 +282,17 @@ a{text-decoration: none}
     display: inline-block;
 }
 .typeInfo {
+    width: 252px;
+    height: 30px;
+    z-index: 9999;
     font-size: 14px;
     color: rgb(31, 61, 60);
     cursor: pointer;
     white-space: nowrap;
-    margin-left: 16px;
+    /*margin-left: 16px;*/
 }
 .typeInfo+.typeInfo {
-    margin-left: 15px;
+    /*margin-left: 15px;*/
 }
 .typeInfo__input {
     white-space: nowrap;
@@ -297,6 +300,7 @@ a{text-decoration: none}
     outline: 0;
     line-height: 1;
     vertical-align: middle;
+    margin-right: -25px;
 }
 .typeInfo__inner {
     border: 1px solid rgb(191, 217, 216);
@@ -340,7 +344,7 @@ a{text-decoration: none}
 }
 .typeInfo__label {
     font-size: 14px;
-    padding-left: 5px;
+    margin-left: 30px;
 }
 .agentLeverStyle {
     font-weight: bolder;
@@ -402,25 +406,25 @@ a{text-decoration: none}
 }
 /*MT4SET END*/
 
-/*emailInfo start*/
-.emailInfo.el-form {
+/*companyInfo start*/
+.companyInfo.el-form {
     margin-left: 62px;
 }
-.emailInfo.el-form > .el-form-item {
+.companyInfo.el-form > .el-form-item {
 
 }
-.emailInfo.el-form .el-form-item__content {
+.companyInfo.el-form .el-form-item__content {
     float: left;
     width: 360px;
 }
-.emailInfo.el-form .el-form-item__label {
-    width: 100px;
+.companyInfo.el-form .el-form-item__label {
+    width: 120px;
     text-align: right;
 }
-.emailInfo.el-form .el-button {
+.companyInfo.el-form .el-button {
     margin-left: 50%;
 }
-.emailInfo.el-form .el-upload__tip {
+.companyInfo.el-form .el-upload__tip {
     width: 360px;
 }
 .emailDetail > .el-dialog {
@@ -444,6 +448,41 @@ a{text-decoration: none}
     width: 217px;
     height: 75px;
 }
-/*emailInfo end*/
+/*companyInfo end*/
+/*返佣规则设置特有的样式 start*/
+.test {
+    width: 240px;
+    height: 30px;
+    background-color: rebeccapurple;
+    position: absolute;
+    z-index: 9;
+    opacity: 0;
+}
+/*返佣规则设置特有的样式 end*/
 
-
+/*资料审核菜单栏样式 start*/
+.tabMenu.el-menu {
+    border-bottom: 1px solid #d1dbe5;
+    padding: 0;
+    position: relative;
+    margin: 0 0 15px;
+}
+.tabMenu.el-menu--horizontal .el-menu-item {
+    height: 42px;
+    line-height: 42px;
+    padding: 0 16px;
+    border-bottom: none;
+}
+.tabMenu.el-menu--horizontal .el-menu-item.is-active {
+    border-bottom: 3px solid #20a0ff;
+}
+.tabMenu.el-menu--horizontal>.el-menu-item:hover {
+    border-bottom: none;
+    color: #1f2d3d!important;
+    background-color: #eef1f6!important;
+}
+.tabMenu.el-menu--horizontal .el-menu-item.is-active:hover {
+    border-bottom: 3px solid #20a0ff;
+    color: #20a0ff!important;
+}
+ /*资料审核菜单栏样式 end*/

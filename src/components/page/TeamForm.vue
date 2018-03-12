@@ -13,6 +13,7 @@
                    <el-date-picker
                        v-model="teamForm.startTime"
                        type="date"
+                       :editable="editableDate"
                        placeholder="选择日期">
                    </el-date-picker>
                </el-form-item>
@@ -20,6 +21,7 @@
                     <el-date-picker
                         v-model="teamForm.endTime"
                         type="date"
+                        :editable="editableDate"
                         placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>

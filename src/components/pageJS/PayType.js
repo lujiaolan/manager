@@ -30,7 +30,7 @@ export default {
             optionsIfUse:[
                 {
                     value:'',
-                    label:'是否启用'
+                    label:'全部'
                 },
                 {
                     value:'1',

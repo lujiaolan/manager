@@ -1,10 +1,9 @@
 /**
  * Created by Udea-Manager on 2017/8/16.
  */
-
-import {
+import
     gbs
-} from 'config/';
+    from '../../config/settings';
 
 class Store {
     constructor() {

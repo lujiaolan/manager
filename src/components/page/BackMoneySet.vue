@@ -154,7 +154,7 @@
 			    </el-table-column>
 			    <el-table-column
 			      label="设置时间"
-                prop="createTime">
+                prop="time">
 			    </el-table-column>
 			    <el-table-column
                   :prop="fields.status.info.prop"

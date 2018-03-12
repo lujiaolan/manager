@@ -14,6 +14,16 @@
     export default {
         components:{
             vHead, vSidebar
+        },
+        data(){
+            return {
+
+            }
+        },
+        mounted(){
+            if(!this.$store.state.user.userinfo.userId){
+                this.$router.push('/login')
+            }
         }
     }
 </script>

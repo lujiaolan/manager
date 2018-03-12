@@ -1,53 +1,54 @@
 export default {
     data() {
         return {
+            editableDate:false,
             options: [
                 {
                     value: 0,
                     label: '所有流水类型'
                 },
                 {
-                    value: 1,
+                    value: '1',
                     label: '在线入金'
                 },
                 {
-                    value: 2,
+                    value: '2',
                     label: '申请出金'
                 },
                 {
-                    value: 4,
+                    value: '4',
                     label: '钱包转MT4'
                 },
                 {
-                    value: 5,
+                    value: '5',
                     label: 'MT4转钱包'
                 },
                 {
-                    value: 6,
+                    value: '6',
                     label: 'MT4转MT4'
                 },
                 {
-                    value: 7,
+                    value: '7',
                     label: '钱包转钱包'
                 },
                 {
-                    value: 9,
+                    value: '9',
                     label: '佣金转入'
                 },
                 {
-                    value: 21,
+                    value: '21',
                     label: '系统入金'
                 },
                 {
-                    value: 22,
+                    value: '22',
                     label: '系统出金'
                 },
                 {
-                    value: 23,
+                    value: '23',
                     label: '添加佣金'
                 },
                 {
-                    value: 24,
+                    value: '24',
                     label: '减少佣金'
                 },
             ],
@@ -206,7 +207,7 @@ export default {
                 endTime = this.moment(this.WaterAccount.dateValue2).format('YYYY-MM-DD');
             }
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/deposit/apFlowBill/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url = this.$store.state.baseUrl + '/crm/deposit/apFlowBill/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&billNum=' + billNum + '&condition=' + condition
                 + '&type=' + type
                 + '&startTime=' + startTime  + '&endTime=' + endTime;

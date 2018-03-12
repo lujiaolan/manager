@@ -15,6 +15,7 @@
                     </el-form-item>
                     <el-form-item prop="typeRole">
                         <el-select v-model="logSearchForm.typeRole" class="handle-select mr10">
+                            <el-option key="user" label="全部" value=""></el-option>
                             <el-option key="user" label="前台日志" value="user"></el-option>
                             <el-option key="admin" label="后台日志" value="admin"></el-option>
                         </el-select>
@@ -24,6 +25,7 @@
                     </el-form-item>
                     <el-form-item prop="logType">
                         <el-select v-model="logSearchForm.logType" class="handle-select mr10">
+                            <el-option key="1" label="全部" value=""></el-option>
                             <el-option key="1" label="登录日志" value="1"></el-option>
                             <el-option key="0" label="标准日志" value="0"></el-option>
                             <el-option key="-1" label="错误日志" value="-1"></el-option>
@@ -70,6 +72,10 @@
                                    layout="prev, pager, next, sizes">
                     </el-pagination>
                 </div>
+            </div>
+            <div>
+                <span>sdfdg</span>
+                <img src="http://udeacrm.oss-cn-hongkong.aliyuncs.com/ap-logo/IDCardHeadPic5a39d3bfa4fe29646a8b1b1b"/>
             </div>
         </div>
     </div>

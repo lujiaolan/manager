@@ -18,13 +18,6 @@ export default {
                 {name:'2016',value:970},
                 {name:'2017',value:1450}
             ],
-            data2 : [
-                {name:'短袖',value:1200},
-                {name:'休闲裤',value:1222},
-                {name:'连衣裙',value:1283},
-                {name:'外套',value:1314},
-                {name:'羽绒服',value:2314}
-            ],
             options1: {
                 title: '某商店近年营业总额',
                 bgColor: '#829dda',
@@ -32,12 +25,6 @@ export default {
                 fillColor: '#72f6ff',
                 axisColor: '#eeeeee',
                 contentColor: '#bbbbbb'
-            },
-            options2: {
-                title: '某商店各商品年度销量',
-                bgColor: '#829dca',
-                titleColor: '#ffffff',
-                legendColor: '#ffffff'
             },
 
         }
@@ -215,7 +202,7 @@ export default {
 
                })
            }
-        }
+        },
     },
     created(){
         this.getBacklogData();
@@ -224,7 +211,6 @@ export default {
         this.getCityTotalInfo();
     },
     mounted(){
-
         const self = this;
         console.log('self.cityTotalInfo')
         console.log(self.cityTotalInfo)

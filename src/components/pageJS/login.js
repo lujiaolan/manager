@@ -30,7 +30,7 @@ export default {
                     if(self.$store.state.domain.domain.domain.apId){
                         self.$ajax({
                             method:'post',
-                            url:'/ap/apUser/login',
+                            url:'/other/ap/apUser/login',
                             data:{
                                 userName:self.ruleForm.userName,
                                 userPassword:MD5(self.ruleForm.userPassword),
@@ -53,10 +53,10 @@ export default {
                                             username: self.ruleForm.userName,
                                             token: res.data.data.token
                                         }
-
                                     },)
                                 }
                                 self.$store.dispatch('update_userinfo',{userinfo:res.data.data});
+                                self.$store.dispatch('update_token',{token:res.data.data.token});
                                 self.$router.push('/home')
                             }else{
                                 self.$message({
@@ -104,7 +104,7 @@ export default {
             this.$ajax({
                 method: 'post',
                 data:postData,
-                url:'/ap/getApId'
+                url:'/other/ap/getApId'
             }).then(function (res) {
                 console.log(res)
                 console.log(res.data.data)

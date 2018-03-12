@@ -1,6 +1,7 @@
 export default {
     data() {
         return {
+            editableDate:false,
             rebateFrom: {
                 tradeAccount: '',
                 commAccount: '',
@@ -205,7 +206,7 @@ export default {
                 endTime = self.moment(self.rebateFrom.endTime).format('YYYY-MM-DD');
             }
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/commission/apCommRecord/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url = this.$store.state.baseUrl + '/crm/commission/apCommRecord/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&agentLevel=' + agentLevel + '&status=' + status
                 + '&tradeAccount=' + this.rebateFrom.tradeAccount.trim()
                 + '&commAccount=' + this.rebateFrom.commAccount.trim()

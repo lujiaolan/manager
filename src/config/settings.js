@@ -6,8 +6,16 @@ var env = process.env;
 
 var gbs = {
     host: '/crm', //接口根地址。
+    // host: 'http://47.91.252.137:80/crm', //接口根地址。AGX
+    // host: 'http://120.77.55.98:8080/crm', //接口根地址。udea
+    // host: 'http://47.52.90.89:80/crm', //接口根地址。DW
     // host: 'http://47.75.1.189:80/crm', //接口根地址。NUN
     // host:'http://47.52.206.28:80/crm', //接口根地址。sns
+    // host: 'http://47.91.252.137:80/crm', //接口根地址。AGX
+    // host: 'http://hkdc1.crm79.com/crm', //接口根地址。后台集群地址
+    // host: 'http://hkdc2.crm79.com/crm', //接口根地址。后台集群地址
+    // host: 'http://hkdc3.crm79.com/crm', //接口根地址。后台集群地址
+    // host: 'http://backupserver1.crm79.com:8080/crm', //接口根地址。后台集群地址
     db_prefix: 'my_config_', //本地存储的key
     //状态码字段
     api_status_key_field: 'status',
@@ -67,7 +75,7 @@ var cbs = {
     }
 };
 
-export {
+export  default {
     gbs,
     cbs
 };

@@ -10,7 +10,7 @@
                 </el-form-item>
                 <el-form-item prop="select_status">
                     <el-select v-model="outMoney.select_status" class="handle-select mr10">
-                        <el-option key="2" label="所有审核状态" value="2"></el-option>
+                        <el-option key="2" label="全部审核状态" value="2"></el-option>
                         <el-option key="1" label="已审核" value="1"></el-option>
                         <el-option key="-1" label="已拒绝" value="-1"></el-option>
                         <el-option key="0" label="待审核" value="-100"></el-option>
@@ -20,6 +20,7 @@
                     <el-date-picker
                         v-model="outMoney.dateValue1"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -27,6 +28,7 @@
                     <el-date-picker
                         v-model="outMoney.dateValue2"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>

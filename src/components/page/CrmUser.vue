@@ -5,9 +5,9 @@
              <el-form-item prop="userNameLike">
                  <el-input v-model="CRMUserSearch.userNameLike" placeholder="姓名/邮箱" class="handle-input mr10"></el-input>
              </el-form-item>
-              <el-form-item prop="referralCode">
-                  <el-input v-model.number="CRMUserSearch.referralCode" placeholder="上级代理" class="handle-input mr10"></el-input>
-              </el-form-item>
+              <!--<el-form-item prop="referralCode">-->
+                  <!--<el-input v-model.number="CRMUserSearch.referralCode" placeholder="上级代理" class="handle-input mr10"></el-input>-->
+              <!--</el-form-item>-->
              <el-form-item prop="status">
                  <el-select v-model="CRMUserSearch.status" placeholder="账户状态" class="handle-select mr10">
                      <el-option  :label="item.label" :value="item.value" :key="item.label" v-for="item in statusList"></el-option>
@@ -39,26 +39,22 @@
                             </el-col>
                         </el-col>
                         <el-col :span="24">
-                            <el-col :span="12">
-                                <el-form-item  label="邮箱"  prop="userEmail">
-                                    <el-input v-model="addAgentForm.userEmail" @key.native.enter="addCrmAgent('addAgentForm')"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item  label="手机号"  prop="userPhone">
-                                    <el-input v-model="addAgentForm.userPhone" @key.native.enter="addCrmAgent('addAgentForm')"></el-input>
-                                </el-form-item>
-                            </el-col>
-                        </el-col>
-                        <el-col :span="24">
+                           <el-col :span="12">
+                               <el-form-item label="拼音" prop="spell">
+                                   <el-input v-model="addAgentForm.spell" placeholder="请输入姓名拼音"></el-input>
+                               </el-form-item>
+                           </el-col>
                             <el-col :span="12">
                                 <el-form-item  label="性别" prop="sex">
                                     <el-radio-group v-model="addAgentForm.sex">
-                                        <el-radio label="男"></el-radio>
-                                        <el-radio label="女"></el-radio>
+                                        <el-radio :label="'男'">男</el-radio>
+                                        <el-radio :label="'女'">女</el-radio>
                                     </el-radio-group>
                                 </el-form-item>
                             </el-col>
+                        </el-col>
+
+                        <el-col :span="24">
                             <el-col :span="12">
                                 <el-form-item  label="出生年月" prop="birthDay">
                                     <el-date-picker  v-model="addAgentForm.birthDay"
@@ -66,13 +62,26 @@
                                                      placeholder="年月日"></el-date-picker>
                                 </el-form-item>
                             </el-col>
+                            <el-col :span="12">
+                                <el-form-item  label="邮箱"  prop="userEmail">
+                                    <el-input v-model="addAgentForm.userEmail" @key.native.enter="addCrmAgent('addAgentForm')"></el-input>
+                                </el-form-item>
+                            </el-col>
                         </el-col>
                         <el-col :span="24">
+                            <el-col :span="12">
+                                <el-form-item  label="手机号"  prop="userPhone">
+                                    <el-input v-model="addAgentForm.userPhone" @key.native.enter="addCrmAgent('addAgentForm')"></el-input>
+                                </el-form-item>
+                            </el-col>
                             <el-col :span="12">
                                 <el-form-item  label="国家" prop="country">
                                     <el-input v-model="addAgentForm.country"></el-input>
                                 </el-form-item>
                             </el-col>
+                        </el-col>
+
+                        <el-col :span="24">
                             <el-col :span="12">
                                 <el-form-item  label="用户界面语言" prop="setUILocale">
                                     <el-select v-model="addAgentForm.setUILocale" placeholder="请选择用户界面语言">
@@ -81,8 +90,6 @@
                                     </el-select>
                                 </el-form-item>
                             </el-col>
-                        </el-col>
-                        <el-col :span="24">
                             <el-col :span="12">
                                 <el-form-item  label="省市区" prop="address">
                                     <el-cascader
@@ -94,10 +101,14 @@
                                     </el-cascader>
                                 </el-form-item>
                             </el-col>
+                        </el-col>
+                        <el-col :span="24">
                             <el-col :span="12">
                                 <el-form-item  label="推荐码" prop="referralCode">
                                     <el-input v-model.number="addAgentForm.referralCode" @key.native.enter="addCrmAgent('addAgentForm')"></el-input>
                                 </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
                                 <el-form-item>
                                     <div class="footer-comfirm">
                                         <el-button @click="addAgentFormVisible = false">取 消</el-button>
@@ -119,7 +130,7 @@
             <el-table-column prop="userEngName" label="认证状态" width="100">
                 <template scope="scope">
                     <span v-if="scope.row.verifyStatus==-1">认证中</span>
-                    <span v-if="scope.row.verifyStatus==0">未认证</span>
+                    <span v-if="scope.row.verifyStatus==0" style="color:red">未认证</span>
                     <span v-if="scope.row.verifyStatus==1">认证成功</span>
                     <span v-if="scope.row.verifyStatus==2">认证失败</span>
                 </template>
@@ -132,10 +143,10 @@
             <el-table-column prop="money" label="钱包余额"></el-table-column>
             <el-table-column prop="status" label="账户状态" >
               <template scope="scope">
-                  <span v-if="scope.row.status==0">未激活</span>
-                  <span v-if="scope.row.status==2">暂停</span>
                   <span v-if="scope.row.status==1">正常</span>
+                  <span v-if="scope.row.status==2">暂停</span>
                   <span v-if="scope.row.status==-1">冻结</span>
+                  <span v-if="scope.row.status==0">未激活</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="280">
@@ -164,8 +175,8 @@
                                             <el-col :span="12">
                                                 <el-form-item  label="性别" >
                                                     <el-radio-group v-model="baseInfoUserForm.sex" :disabled="baseInfoEditVisible">
-                                                        <el-radio :label="1">男</el-radio>
-                                                        <el-radio :label="2" >女</el-radio>
+                                                        <el-radio :label="'男'">男</el-radio>
+                                                        <el-radio :label="'女'" >女</el-radio>
                                                     </el-radio-group>
                                                 </el-form-item>
                                             </el-col>
@@ -177,29 +188,35 @@
                                         </el-col>
                                         <el-col :span="24">
                                             <el-col :span="12">
+                                                <el-form-item label="拼音" prop="spell">
+                                                    <el-input v-model="baseInfoUserForm.spell" :disabled="baseInfoEditVisible"></el-input>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span="12">
                                                 <el-form-item  label="邮箱" >
                                                     <el-input v-model="baseInfoUserForm.userEmail" disabled=""></el-input>
                                                 </el-form-item>
                                             </el-col>
-                                            <el-col :span="12">
-                                                <el-form-item  label="手机号" >
-                                                    <el-input v-model="baseInfoUserForm.userPhone" :disabled="baseInfoEditVisible"></el-input>
-                                                </el-form-item>
-                                            </el-col>
                                             <el-col :span="24">
+                                                <el-col :span="12">
+                                                    <el-form-item  label="手机号" >
+                                                        <el-input v-model="baseInfoUserForm.userPhone" :disabled="baseInfoEditVisible"></el-input>
+                                                    </el-form-item>
+
+                                                </el-col>
                                                 <el-col :span="12">
                                                     <el-form-item  label="国家" >
                                                         <el-input v-model="baseInfoUserForm.country" :disabled="baseInfoEditVisible"></el-input>
                                                     </el-form-item>
                                                 </el-col>
+                                            </el-col>
+                                            <el-col :span="24">
                                                 <el-col :span="12">
                                                     <el-form-item  label="出生日期" >
                                                         <el-date-picker v-model="baseInfoUserForm.birthDay" type='date' placeholder="选择出生日期"
                                                                         :disabled="baseInfoEditVisible"></el-date-picker>
                                                     </el-form-item>
                                                 </el-col>
-                                            </el-col>
-                                            <el-col :span="24">
                                                 <el-col :span="12">
                                                     <el-form-item  label="省市区" >
                                                         <el-cascader
@@ -212,36 +229,36 @@
                                                         </el-cascader>
                                                     </el-form-item>
                                                 </el-col>
-                                                <el-col :span="12">
-                                                    <el-form-item  label="用户界面语言" >
-                                                        <el-select v-model="baseInfoUserForm.setUILocale" :disabled="baseInfoEditVisible"
-                                                                   placeholder="请选择用户界面语言">
-                                                            <el-option :label="item.label" :key="item.label"
-                                                                       :value="item.value" v-for="item in setUILocaleList" ></el-option>
-                                                        </el-select>
-                                                    </el-form-item>
-                                                </el-col>
                                             </el-col>
-                                           <el-col :span="24">
-                                               <el-col :span="12">
-                                                   <el-form-item  label="账户状态"  >
-                                                       <el-radio-group v-model="baseInfoUserForm.status" :disabled="baseInfoEditVisible">
-                                                           <el-radio :label="1">正常</el-radio>
-                                                           <el-radio :label="2" >冻结</el-radio>
-                                                       </el-radio-group>
-                                                   </el-form-item>
-                                               </el-col>
-                                               <el-col :span="12">
-                                                   <el-form-item  label="上级代理邮箱" >
-                                                       <el-input v-model="baseInfoUserForm.superUserEmail" disabled=""></el-input>
-                                                   </el-form-item>
-                                               </el-col>
-                                           </el-col>
+                                            </el-col>
+                                        <el-col :span="24">
                                             <el-col :span="12">
-                                                <el-form-item  label="联系地址" >
-                                                    <el-input v-model="baseInfoUserForm.addressDetail" disabled=""></el-input>
+                                                <el-form-item  label="用户界面语言" >
+                                                    <el-select v-model="baseInfoUserForm.setUILocale" :disabled="baseInfoEditVisible"
+                                                               placeholder="请选择用户界面语言">
+                                                        <el-option :label="item.label" :key="item.label"
+                                                                   :value="item.value" v-for="item in setUILocaleList" ></el-option>
+                                                    </el-select>
                                                 </el-form-item>
                                             </el-col>
+                                            <el-col :span="12">
+                                                <el-form-item  label="账户状态"  >
+                                                    <el-radio-group v-model="baseInfoUserForm.status" :disabled="baseInfoEditVisible">
+                                                        <el-radio :label="1">正常</el-radio>
+                                                        <el-radio :label="-1" >冻结</el-radio>
+                                                    </el-radio-group>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item  label="上级代理邮箱" >
+                                                <el-input v-model="baseInfoUserForm.superUserEmail" disabled=""></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item  label="联系地址" >
+                                                <el-input v-model="baseInfoUserForm.addressDetail" :disabled="baseInfoEditVisible"></el-input>
+                                            </el-form-item>
                                         </el-col>
                                     </el-row>
                                 </el-form>
@@ -308,7 +325,7 @@
                                             <el-upload
                                                 class="upload-demo"
                                                 drag
-                                                action="http://120.77.55.98:8080/crm/ap/img/upload"
+                                                :action="bankCardHeadPicUpload"
                                                 multiple
                                                 :show-file-list="false"
                                                 :before-upload="beforeBankHeadPicUserUpload"
@@ -330,7 +347,7 @@
                                                 drag
                                                 :before-upload="beforeBankHeadPicUserUpload"
                                                 :on-success="handleSuccessUserBankTailPic"
-                                                action="http://120.77.55.98:8080/crm/ap/img/upload"
+                                                :action="bankCardTailPicUpload"
                                                 multiple
                                                 :show-file-list="false"
                                                 v-if="scope.$index==editVisibleUserIndex">
@@ -369,32 +386,38 @@
                                @click="changeBalance(scope.row)">调整金额</el-button>
                     <el-dialog title="调整金额" :visible.sync="changeBalanceVisible">
                         <el-form :model="changeBalanceForm" label-width="120px" ref="changeBalanceForm" :rules="changeBalanceRules">
-                            <el-form-item class="width-40 marginR10" label="邮箱" prop="agentEmail">
-                                <el-input v-model="changeBalanceForm.Email" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="钱包余额" prop="agentEmail">
-                                <el-input v-model="changeBalanceForm.Balance" disabled></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="调整类型" required prop="changeType">
-                                <el-select v-model="changeBalanceForm.changeType">
-                                    <el-option label="入金" value="1"></el-option>
-                                    <el-option label="出金" value="-1"></el-option>
-                                    <el-option label="添加拥金" value="2"></el-option>
-                                    <el-option label="减少佣金" value="-2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="金额" prop="Count">
-                                <el-input v-model="changeBalanceForm.Count"></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10" label="管理员备注" >
-                                <el-input v-model="changeBalanceForm.AdminTip"></el-input>
-                            </el-form-item>
-                            <el-form-item class="width-40 marginR10">
-                                <template>
-                                    <el-button @click="changeBalanceVisible = false">取 消</el-button>
-                                    <el-button type="primary" @click="changeBalanceS('changeBalanceForm')">确 定</el-button>
-                                </template>
-                            </el-form-item>
+                            <el-row>
+                                <el-form-item class="width-40 marginR10" label="姓名" prop="IDName">
+                                    <el-input v-model="changeBalanceForm.IDName" disabled></el-input>
+                                </el-form-item>
+                                <el-form-item class="width-40 marginR10" label="钱包余额" prop="agentEmail">
+                                    <el-input v-model="changeBalanceForm.Balance" disabled></el-input>
+                                </el-form-item>
+                            </el-row>
+                            <el-row>
+                                <el-form-item class="width-40 marginR10" label="调整类型" required prop="changeType">
+                                    <el-select v-model="changeBalanceForm.changeType" style="width: 100%">
+                                        <el-option label="入金" value="1"></el-option>
+                                        <el-option label="出金" value="-1"></el-option>
+                                        <el-option label="添加拥金" value="2"></el-option>
+                                        <el-option label="减少佣金" value="-2"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item class="width-40 marginR10" label="金额" prop="Count">
+                                    <el-input v-model="changeBalanceForm.Count"></el-input>
+                                </el-form-item>
+                            </el-row>
+                            <el-row>
+                                <el-form-item class="width-40 marginR10" label="管理员备注" >
+                                    <el-input v-model="changeBalanceForm.AdminTip"></el-input>
+                                </el-form-item>
+                                <el-form-item class="width-40 marginR10">
+                                    <template>
+                                        <el-button type="primary" @click="changeBalanceS('changeBalanceForm')">确 定</el-button>
+                                        <el-button @click="changeBalanceVisible = false">取 消</el-button>
+                                    </template>
+                                </el-form-item>
+                            </el-row>
                         </el-form>
                     </el-dialog>
                     <el-button size="small"

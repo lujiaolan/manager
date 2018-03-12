@@ -10,13 +10,14 @@ export default {
     data() {
         return {
             activeName: 'first',
+            editableDate:false,
             payAuditVisible: false,
             outMoneyList:[],
             withdrawTotal:null,
             passOrRefuse:'',
             select_statusList:[
                 {
-                    label:'全部状态',
+                    label:'全部审核状态',
                     value:''
                 },
                 {
@@ -187,7 +188,7 @@ export default {
             }
             // console.log('/financial/withdraw/ap/export postData');
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/financial/withdraw/ap/export?apId=' + this.$store.state.domain.domain.domain.apId
+           const url = this.$store.state.baseUrl + '/crm/financial/withdraw/ap/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&condition=' + this.outMoney.userEmail + '&orderNum=' + this.outMoney.orderNum
                 + '&status=' + this.outMoney.status  + '&startTime=' + startTime  + '&endTime=' + endTime;
             console.log('exportOutMoneyAudit url');

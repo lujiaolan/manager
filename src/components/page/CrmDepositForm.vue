@@ -6,40 +6,42 @@
         <el-tab-pane label="账户入金记录" name="second" >
             <div class="crmAgent">
                 <div class="handle-box">
-                    <el-form :model="CRMdeposit" :rules="CRMdeposit_rules" ref="CRMdeposit">
-                        <el-row>
-                            <el-col :span="24">
-                                <el-col :span="3">
-                                    <el-input v-model="CRMdeposit.orderNum" placeholder="订单编号" class="handle-input mr10"></el-input>
-                                </el-col>
-                                <el-col :span="3">
-                                    <el-input v-model="CRMdeposit.condition" placeholder="邮箱/姓名" class="handle-input mr10" ></el-input>
-                                </el-col>
-                                <el-col :span="3">
-                                    <el-select v-model="CRMdeposit.status" placeholder="所有存款状态" class="handle-select mr10">
-                                       <el-option v-for="item in statusList" :key="item.value" :value="item.value" :label="item.label"></el-option>
-                                    </el-select>
-                                </el-col>
-                                <el-col :span="3">
-                                    <el-date-picker
-                                        v-model="CRMdeposit.dateValue1"
-                                        type="date"
-                                        @key.native.enter="searchCRMdeposit('CRMdeposit')"
-                                        placeholder="选择日期">
-                                    </el-date-picker>
-                                </el-col>
-                                <el-col :span="7">
-                                    <el-date-picker
-                                        v-model="CRMdeposit.dateValue2"
-                                        type="date"
-                                        @key.native.enter="searchCRMdeposit('CRMdeposit')"
-                                        placeholder="选择日期">
-                                    </el-date-picker>
-                                    <el-button type="primary" @click="searchCRMdeposit('CRMdeposit')">查询</el-button>
-                                    <el-button type="primary" @click="exportCrmDeposit">导出Excel</el-button>
-                                </el-col>
-                            </el-col>
-                        </el-row>
+                    <el-form :model="CRMdeposit" :rules="CRMdeposit_rules" ref="CRMdeposit" class="outMoneyMarginR20">
+                        <el-form-item>
+                            <el-input v-model="CRMdeposit.orderNum" placeholder="订单编号" class="handle-input mr10"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-input v-model="CRMdeposit.condition" placeholder="邮箱/姓名" class="handle-input mr10" ></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-select v-model="CRMdeposit.status" placeholder="所有存款状态" class="handle-select mr10">
+                                <el-option v-for="item in statusList" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-date-picker
+                                v-model="CRMdeposit.startTime"
+                                type="date"
+                                :editable="editableDate"
+                                @key.native.enter="searchCRMdeposit('CRMdeposit')"
+                                placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-date-picker
+                                v-model="CRMdeposit.endTime"
+                                type="date"
+                                :editable="editableDate"
+                                @key.native.enter="searchCRMdeposit('CRMdeposit')"
+                                placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="searchCRMdeposit('CRMdeposit')">查询</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="exportCrmDeposit">导出Excel</el-button>
+                        </el-form-item>
                     </el-form>
                 </div>
                 <el-table :data="CRMdepositList" border style="width: 100%">

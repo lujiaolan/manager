@@ -1,8 +1,8 @@
 /**
  * Created by Udea-Manager on 2017/10/26.
  */
-import innerTurnForm from '../page/innerTurnForm.vue';
-import outMoneyForm from '../page/outMoneyForm.vue';
+import innerTurnForm from '../page/InnerTurnForm.vue';
+import outMoneyForm from '../page/OutMoneyForm.vue';
 import $ from 'jquery';
 export default{
     components:{
@@ -12,6 +12,7 @@ export default{
     },
     data(){
         return{
+            drawMoney:this.$store.state.drawMoney.drawMoney,
             defaultMoney:'',
             realTimeRateStatusDisabled:false,
             depositeditOrAdd:'',
@@ -59,7 +60,7 @@ export default{
                     resetType:'+',
                     resetNum:''
                 },
-                type:1
+                type:null
             },
             typeList:[
                 {
@@ -283,6 +284,16 @@ export default{
                                message:'编辑成功',
                                showClose:true
                            });
+                           console.log('postData.type')
+                           console.log(postData.type)
+                           if(postData.type===1) {
+                               self.drawMoney.inMoneyFlag = false;
+                           }else{
+                               self.drawMoney.inMoneyFlag = true;
+                           }
+                           self.$store.dispatch('update_drawMoney',{
+                               inMoneyFlag:self.drawMoney.inMoneyFlag,
+                           })
                            self.getdepositConfig();
                        }else{
                            self.$message({
@@ -292,6 +303,7 @@ export default{
                            })
                        }
                    }).catch(function (err) {
+                       console.log(err)
                        self.$message({
                            type:'error',
                            message:'网络错误',
@@ -324,6 +336,19 @@ export default{
             })
         },
         getdepositConfig(){
+            console.log('this.$store.state.drawMoney.drawMoney.inMoneyFlag')
+            console.log(this.$store.state.drawMoney.drawMoney.inMoneyFlag);
+            if(this.$store.state.drawMoney.drawMoney.inMoneyFlag){
+                this.typeSelect.resetMoneyColor.display='none';
+                this.typeSelect.resetNumColor.display='block';
+                this.inMoneyForm.type=2
+
+            }else{
+                this.typeSelect.resetMoneyColor.display='block';
+                this.typeSelect.resetNumColor.display='none';
+
+                this.inMoneyForm.type=1
+            }
             const apId = this.$store.state.domain.domain.domain.apId;
             const self = this;
            if(apId){

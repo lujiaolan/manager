@@ -38,7 +38,7 @@
 </template>
 
 <script>
-    module.exports = require('../pageJS/login');
+    module.exports = require('../pageJS/Login');
 </script>
 
 <style scoped>

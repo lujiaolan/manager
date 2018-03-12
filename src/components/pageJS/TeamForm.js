@@ -1,21 +1,15 @@
 export default {
     data() {
         return {
+            editableDate:false,
             historyList:[],
             teamForm: {
                 apId:this.$store.state.domain.domain.domain.apId,
                 agentNameLike:'',
                 startTime:'',
                 endTime:'',
-                page:1,
                 currentPage:1,
                 pageSize:10,
-                agentLevel:null,
-                role:'',
-                userName:'',
-                userId:'',
-                IDName:'',
-                userEmail:''
             },
             historyTeamInfo:{
                 apId:this.$store.state.domain.domain.domain.apId,
@@ -197,13 +191,15 @@ export default {
             const self = this;
             this.$ajax({
                 method:'post',
-                url:'/user/agentInfo/agent',
+                url:'/ap/teamStat/financialStat',
                 data:this.teamForm
             }).then(function (res) {
                 if(res.data.retCode===0){
                     console.log(res)
                     self.teamFormTotal = res.data.data.totalAmount;
-                    self.teamInfoList = res.data.data.content;
+                    console.log( 'financialStat:');
+                    console.log( res.data.data);
+                    self.teamInfoList = res.data.data;
                     self.teamInfoList.forEach(function (item,index) {
                         self.teamInfoList[index].totalDeposit = self.accounting.formatMoney(item.totalDeposit,'',2,',','.')
                         self.teamInfoList[index].totalWithdraw = self.accounting.formatMoney(item.totalWithdraw,'',2,',','.')

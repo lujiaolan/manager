@@ -15,7 +15,7 @@
                                         v-bind:style="typeSelect.resetMoneyColor">
                               <el-input v-model="inMoneyForm.depositRealTimeRate" placeholder="实时汇率" disabled=""></el-input>
                           </el-form-item>
-                          <el-row :gutter="10" v-bind:style="typeSelect.resetMoneyColor">
+                          <el-row :gutter="12" v-bind:style="typeSelect.resetMoneyColor">
                                   <el-col :span="8">
                                       <el-form-item label-width="140px">
                                           <el-select v-model="inMoneyForm.inMoneyExRateReset.resetType" placeholder="请选择" >
@@ -35,8 +35,8 @@
                                           </el-input>
                                       </el-form-item>
                                   </el-col>
-                                  <el-col :span="6">
-                                      <el-form-item  label="失败时:" label-width="60px" prop="depositReplaceRate">
+                                  <el-col :span="10">
+                                      <el-form-item  label="失败时汇率:" label-width="90px" prop="depositReplaceRate">
                                           <el-input v-model.number="inMoneyForm.depositReplaceRate"
                                                     placeholder="汇率" ></el-input>
                                       </el-form-item>

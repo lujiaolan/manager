@@ -47,7 +47,7 @@ export default {
                         if(value){
                             this.$ajax({
                                 method: 'post',
-                                url: '/check/validCode',
+                                url: '/other/check/validCode',
                                 data: {
                                     validCode: value
                                 }
@@ -115,7 +115,7 @@ export default {
                     if(self.$store.state.domain.domain.domain.apId){
                         this.$ajax({
                             method: 'post',
-                            url: "/ap/userPwd/forget",
+                            url: "/other/ap/userPwd/forget",
                             data: {
                                 apId: self.$store.state.domain.domain.domain.apId,
                                 newUserPassword: MD5(self.forgotNumForm.newPwd),
@@ -163,7 +163,7 @@ export default {
                 if(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(this.forgotNumForm.email)){
                     this.$ajax({
                         method: 'post',
-                        url: '/pwdReset/validCode',
+                        url: '/other/pwdReset/validCode',
                         data: {
                             userEmail: self.forgotNumForm.email,
                             apId: self.$store.state.domain.domain.domain.apId
@@ -205,7 +205,7 @@ export default {
             const theh = this;
             this.$ajax({
                 method: 'post',
-                url: '/check/validCode',
+                url: '/other/check/validCode',
                 data: {
                     validCode: this.forgotNumForm.idCode
                 }

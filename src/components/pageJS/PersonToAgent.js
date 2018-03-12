@@ -70,14 +70,24 @@ export default {
                 if(res.data.retCode==0){
                     self.$message({
                         type:'info',
-                        message:'审核成功',
+                        // message:'审核成功',
+                        message:'邮件发送成功，请注意查收',
+                        showCloe:true
+                    });
+                    self.searchToAgent();
+                }else if(res.data.retCode==1){
+                    self.$message({
+                        type:'info',
+                        // message:'审核成功',
+                        message:'操作成功，请稍后查收邮件',
                         showCloe:true
                     });
                     self.searchToAgent();
                 }else{
                     self.$message({
                         type:'warning',
-                        message:'审核失败',
+                        // message:'审核失败',
+                        message:'操作失败，请稍后再试',
                         showCloe:true
                     })
                 }

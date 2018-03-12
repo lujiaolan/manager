@@ -1,6 +1,7 @@
 export default {
     data() {
         return {
+            editableDate:false,
             MT4deposit: {
                 orderId: '',
                 condition: '',
@@ -162,7 +163,7 @@ export default {
                 endTime = self.moment(self.MT4deposit.dateValue2).format('YYYY-MM-DD');
             }
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/deposit/apBill/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url =  this.$store.state.baseUrl + '/crm/deposit/apBill/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&billNum=' + this.MT4deposit.orderId
                 + '&condition=' + this.MT4deposit.condition.trim()
                 + '&type=' + type  + '&startTime=' + startTime  + '&endTime=' + endTime;

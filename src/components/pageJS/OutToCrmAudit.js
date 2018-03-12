@@ -1,6 +1,7 @@
 export default {
     data() {
         return {
+            editableDate:false,
             apId: this.$store.state.domain.domain.domain.apId,
             payAuditVisible: false,
             payRefuseVisible: false,
@@ -245,7 +246,7 @@ export default {
             this.getData();
         },
         exportOutToCrmAudit(){
-            const baseUrl = 'http://120.77.55.98:8080/crm/ap/workOrder/export?apId=' + this.apId + '&userEmail=' + this.outMoney.select_email + '&workOrderId=' + this.outMoney.select_orderId;
+            const baseUrl =  this.$store.state.baseUrl + '/crm/ap/workOrder/export?apId=' + this.apId + '&userEmail=' + this.outMoney.select_email + '&workOrderId=' + this.outMoney.select_orderId;
             let url,status;
             let startTime = '';
             let endTime = '';

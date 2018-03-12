@@ -7,6 +7,13 @@ export default {
         //18位数身份证正则表达式
         let arg2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[A-Z])$/;
         return{
+            editablePick:false,
+            // this.$route.query.crmRow
+            IDCardHeadPicUpload: 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/IDCardHeadPic'+ this.$route.query.crmRow + '?dir=ap-logo/&contentType=image/jpeg',
+            IDCardTailPicUpload: 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/IDCardTailPic'+ this.$route.query.crmRow + '?dir=ap-logo/&contentType=image/jpeg',
+            bankCardHeadPicUpload: 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardHeadPic'+ this.$route.query.crmRow + '?dir=ap-logo/&contentType=image/jpeg',
+            bankCardTailPicUpload: 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardTailPic'+ this.$route.query.crmRow + '?dir=ap-logo/&contentType=image/jpeg',
+            // auditUpload: this.$store.state.baseUrl + '/crm/ap/img/upload',
             CRMAuditEditSave:'',
             CRMAuditEdit:{
                 userEngName:"",
@@ -89,7 +96,13 @@ export default {
                 }],//市
                 birthDay: [{
                     required: true,
-                    message: '请输入出生年月',
+                    validator:(rules,value,callback)=>{
+                        if(value==''||value==undefined||value=='Invalid date'){
+                            callback(new Error('请输入出生日期'))
+                        }  else{
+                           callback()
+                        }
+                    },
                     trigger: 'blur'
                 }],
                 cardHolder: [{
@@ -132,7 +145,7 @@ export default {
                 IDNumber: [{
                     required: true,
                     validator:(rules,value,callback)=>{
-                        if(value==''){
+                        if(value==''||value==undefined){
                             callback(new Error('请输入身份证'))
                         }  else{
                             if( value.match(arg1) == null && value.match(arg2) == null){
@@ -174,7 +187,7 @@ export default {
                     message: '请输入银行卡号',
                     trigger: 'blur'
                 }],
-                bankAddress: [{
+                addressDetail: [{
                     required: true,
                     message: '请输入居住地址',
                     trigger: 'blur'
@@ -198,17 +211,17 @@ export default {
             console.log(file);
             console.log(this.CRMAuditEdit.IDCardHeadPic );
             this.imageUrl.imageIDHeadUrl =file.url;
-            this.CRMAuditEdit.IDCardHeadPic = file.response.data.fileName;
+            this.CRMAuditEdit.IDCardHeadPic = res.data;
         },
         handleSuccessIDTailPic(res,file){
             console.log('handleSuccessIDTailPic')
             console.log(file.response.data.fileName)
             this.imageUrl.imageIDTailUrl =file.url;
-            this.CRMAuditEdit.IDCardTailPic = file.response.data.fileName;
+            this.CRMAuditEdit.IDCardTailPic = res.data;
         },
         handleSuccessBankHeadPic(res,file){
             this.imageUrl.imageBankHeadUrl =file.url;
-            this.CRMAuditEdit.bankCardHeadPic =file.response.data.fileName;
+            this.CRMAuditEdit.bankCardHeadPic =res.data;
         },
         beforeBankPicEditUpload(file){
             const isJPG = file.type === 'image/jpeg';
@@ -225,7 +238,7 @@ export default {
         },
         handleSuccessBankTailPic(res,file){
             this.imageUrl.imageBankTailUrl =file.url;
-            this.CRMAuditEdit.bankCardTailPic = file.response.data.fileName;
+            this.CRMAuditEdit.bankCardTailPic = res.data;
         },
         saveCRMAuditEdit(ref){
             const addr = [];
@@ -293,15 +306,28 @@ export default {
                               if(res.data.retCode==0){
                                   self.$message({
                                       type:"info",
-                                      message:'审核修改成功',
+                                      // message:'审核修改成功',
+                                      message:'邮件发送成功，请注意查收',
                                       showClose:'true'
                                   });
                                   self.getCRMAuditEdit();
-                                  self.$router.push('/CrmAudit');
+                                  this.$store.dispatch('update_tab_active','second');
+                                  self.$router.push('/DataAudit');
+                              }else if(res.data.retCode==1){
+                                  self.$message({
+                                      type:"info",
+                                      // message:'审核修改成功',
+                                      message:'操作成功，请稍后查收邮件',
+                                      showClose:'true'
+                                  });
+                                  self.getCRMAuditEdit();
+                                  this.$store.dispatch('update_tab_active','second');
+                                  self.$router.push('/DataAudit');
                               }else{
                                   self.$message({
                                       type:"warning",
-                                      message:'审核修改失败',
+                                      // message:'审核修改失败',
+                                      message:'操作失败，请稍后再试',
                                       showClose:'true'
                                   })
                               }
@@ -334,7 +360,8 @@ export default {
         },
         redirectHistory(){
             console.log("redirectHistory");
-            this.$router.push('./CrmAudit');
+            this.$store.dispatch('update_tab_active','second');
+            this.$router.push('/DataAudit');
         },
         getCRMAuditEdit(){
           console.log(this.$route.query.crmRowId);
@@ -342,7 +369,7 @@ export default {
             if(this.$route.query.crmRowId){
                 this.$ajax({
                     method:'get',
-                    url:'/user/'+this.$route.query.crmRowId
+                    url:'/other/user/'+this.$route.query.crmRowId
                 }).then(function (res) {
                     if(res.data.retCode==0){
                         console.log(res);
@@ -379,7 +406,6 @@ export default {
                             self.CRMAuditEdit.bankBranch = '';
                             self.CRMAuditEdit.bankId = '';
                             self.CRMAuditEdit.bankName = '';
-                            self.CRMAuditEdit.bankAddress = '';
                             self.CRMAuditEdit.bankCardHeadPic = '';
                             self.CRMAuditEdit.bankCardTailPic = '';
                         }else{
@@ -395,17 +421,22 @@ export default {
                             self.CRMAuditEdit.bankBranch = getUserInfo.bankCard[importCart].bankBranch;
                             self.CRMAuditEdit.bankId = getUserInfo.bankCard[importCart].id;
                             self.CRMAuditEdit.bankName = getUserInfo.bankCard[importCart].bankName;
-                            self.CRMAuditEdit.bankAddress = getUserInfo.bankCard[importCart].bankAddress;
                             self.CRMAuditEdit.bankCardHeadPic = getUserInfo.bankCard[importCart].bankCardHeadPic;
                             self.CRMAuditEdit.bankCardTailPic = getUserInfo.bankCard[importCart].bankCardTailPic;
                         }
                         console.log(getUserInfo.IDCard.IDCardHeadPic);
                         console.log('getUserInfo');
                         console.log(self.CRMAuditEdit.IDCardHeadPic);
-                        self.CRMAuditEdit.birthDay =getUserInfo.birthDay;
+                        if(getUserInfo.birthDay==undefined||getUserInfo.birthDay=='Invalid date'){
+                            self.CRMAuditEdit.birthDay = ''
+                        }else{
+                            self.CRMAuditEdit.birthDay =getUserInfo.birthDay;
+                        }
+
                         self.CRMAuditEdit.userEmail =getUserInfo.userEmail;
                         self.CRMAuditEdit.userPhone =getUserInfo.userPhone;
                         self.CRMAuditEdit.role =getUserInfo.role;
+                        self.CRMAuditEdit.addressDetail =getUserInfo.addressDetail;
                         self.CRMAuditEdit.country =getUserInfo.country;
                         if(getUserInfo.address){
                             self.CRMAuditEdit.addressOne =getUserInfo.address[0];

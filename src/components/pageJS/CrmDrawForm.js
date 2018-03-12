@@ -5,6 +5,7 @@
 export default {
     data() {
         return {
+            editableDate:false,
             activeName: 'first',
             payAuditVisible: false,
             outMoneyList:[],
@@ -12,7 +13,7 @@ export default {
             passOrRefuse:'',
             select_statusList:[
                 {
-                    label:'全部状态',
+                    label:'全部审核状态',
                     value:''
                 },
                 {
@@ -186,7 +187,7 @@ export default {
                 endTime = this.moment(this.outMoney.endTime).format('YYYY-MM-DD');
             }
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/financial/minus/ap/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url = this.$store.state.baseUrl + '/crm/financial/minus/ap/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&orderNum=' + orderNum + '&status=' + status
                 + '&condition=' + condition
                 + '&startTime=' + startTime  + '&endTime=' + endTime;

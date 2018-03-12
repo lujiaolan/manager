@@ -1,6 +1,7 @@
 export default {
     data() {
         return {
+            editableDate:false,
             orderSelect:{
                 mt4UserId: '',
                 orderId: '',
@@ -145,8 +146,8 @@ export default {
                 postData.query.TradeSymbol = self.orderSelect.symbolType;
             }
             if(self.orderSelect.startTime !== ''&& self.orderSelect.endTime !== ''){
-                postData.query.startTime = ((new Date(self.moment(self.orderSelect.startTime).format('YYYY/MM/DD'))).getTime())/1000;
-                postData.query.endTime = ((new Date(self.moment(self.orderSelect.endTime).format('YYYY/MM/DD'))).getTime())/1000;
+                postData.query.startTime = this.moment(self.orderSelect.startTime).format('YYYY-MM-DD 00:00:00');
+                postData.query.endTime = this.moment(self.orderSelect.startTime).format('YYYY-MM-DD 23:59:59');
             }
             console.log('初始话的postData');
             console.log(postData);
@@ -231,7 +232,7 @@ export default {
                 endTime = this.moment(this.orderSelect.endTime).format('YYYY-MM-DD');
             }
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/order/history/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url = this.$store.state.baseUrl + '/crm/order/history/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&UserLoginID=' + UserLoginID + '&TradeID=' + TradeID
                 + '&TradeSymbol=' + TradeSymbol
                 + '&startTime=' + startTime  + '&endTime=' + endTime;

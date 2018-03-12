@@ -86,9 +86,9 @@ export default {
                     method: get,
                     url: '/logout/' + self.$store.state.user.userinfo.userId
                 }).then(function (res) {
-                    
+
                 }).catch(function () {
-                    
+
                 })
             }
             if(command=='modifyPwd'){
@@ -115,7 +115,18 @@ export default {
                         if(res.data.retCode==0){
                             self.$message({
                                 showClose:true,
-                                message:'修改密码成功',
+                                // message:'修改密码成功',
+                                message:'邮件发送成功，请注意查收',
+                                type:'info'
+                            });
+                            self.modifyPwdShow = false;
+                            self.$store.dispatch('remove_userinfo',{userinfo:res.data.data});
+                            self.$router.push('/login');
+                        }else if(res.data.retCode==1){
+                            self.$message({
+                                showClose:true,
+                                // message:'修改密码成功',
+                                message:'操作成功，请稍后查收邮件',
                                 type:'info'
                             });
                             self.modifyPwdShow = false;
@@ -124,7 +135,8 @@ export default {
                         }else{
                             self.$message({
                                 showClose:true,
-                                message:'修改密码失败',
+                                // message:'修改密码失败',
+                                message:'操作失败，请稍后再试',
                                 type:'warning'
                             })
                         }

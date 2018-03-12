@@ -127,8 +127,6 @@
                 <div class="card-title">
                     <span>客户来源统计</span>
                 </div>
-                <!--<schart canvasId="pie" width="500" height="300" :data="data2" type="pie" :options="options2"></schart>-->
-                <!--<div :class="className" :id="id" :style="{height:height,width:width}"></div>-->
                 <div id="main"  :style="{width:'500px',height:'300px'}"></div>
             </el-card>
         </div>
@@ -168,7 +166,7 @@
 </template>
 
 <script>
-    module.exports = require('../pageJS/home')
+    module.exports = require('../pageJS/Home')
 </script>
 <style lang="less" scoped="">
     .today-total{

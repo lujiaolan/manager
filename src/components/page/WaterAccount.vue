@@ -17,6 +17,7 @@
                     <el-date-picker
                         v-model="WaterAccount.dateValue1"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -24,6 +25,7 @@
                     <el-date-picker
                         v-model="WaterAccount.dateValue2"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>

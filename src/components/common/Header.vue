@@ -16,7 +16,7 @@
                 </span>
                 <el-dropdown-menu slot="dropdown" class="clearTop text-color-6">
                     <el-dropdown-item command="modifyPwd">修改密码</el-dropdown-item>
-                    <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
+                    <!--<el-dropdown-item command="loginout">退出登录</el-dropdown-item>-->
                 </el-dropdown-menu>
             </el-dropdown>
         </div>

@@ -5,6 +5,9 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import setting from '../../config/settings';
+import router from '../../router/index';
+import store from '../../store/index'
 
 Vue.use(VueAxios, axios);
 import {
@@ -12,70 +15,77 @@ import {
     gbs
 } from 'config/';
 
-Vue.axios.defaults.baseURL = gbs.host;
+Vue.axios.defaults.baseURL = setting.gbs.host;
 
-export default function ({
-                             type,
-                             path,
-                             data,
-                             fn,
-                             errFn,
-                             tokenFlag,
-                             headers,
-                             opts
-                         } = {}) {
-    var options = {
-        methods: type,
-        url: path,
-        headers: headers && typeof headers === 'object' ? headers : {}
-    };
-    var api_flag = true;
-    //检测接口权限--后做
 
-    if (api_flag === true) {
-        options[type === 'get' ? 'params' : 'data'] = data;
-        if (tokenFlag !== true) {
-            // data.token = 'Bearer '+this.$store.state.user.userinfo.token;
-            options.headers.token = 'Bearer ' + this.$store.state.user.userinfo.token;
-        }
-        if (opts && typeof opts === 'object') {
-            for (var f in opts) {
-                options[f] = opts[f]
-            }
-        }
-        axios.interceptors.request.use(
-            config => {
-                return config;
-            },
-            err => {
-                return Promise.reject(err);
-            });
-        Vue.axios(options).then((res) => {
-            if (res.data[gbs.api_status_key_field] === gbs.api_status_value_field) {
-                gbs.api_custom[res.data[gbs.api_status_key_field]].call(this, res.data);
-                if (gbs.api_data_field) {
-                    fn(res.data[gbs.api_data_field]);
-                } else {
-                    fn(res.data);
-                }
-            } else {
-                if (gbs.api_custom[res.data[gbs.api_status_key_field]]) {
-                    if (errFn) {
-                        errFn.call(this, res.data);
-                    } else {
-                        cbs.statusError.call(this, res.data);
-                    }
-                }
-            }
-        }).catch((err) => {
-            console.log(this.$store.state.user.userinfo.toke);
-            // this.$store.dispatch('hide_loading');
-        })
-    }
-    else {
-        this.$alert('您没用权限请求该接口', '请求错误', {
-            confirmButtonText: '确定',
-            type: 'warning'
-        });
-    }
+// //http response 拦截器
+// axios.interceptors.response.use(
+//     response => {
+//         console.log('进入 response:');
+//         console.log(response);
+//         const urlRequest = response.config.url.split('/');
+//         console.log(urlRequest)
+//         // console.log(urlRequest[4])//上线时用
+//         console.log(urlRequest[2])// 测试时用
+//         if(urlRequest[2]=='other'){
+//             return response;
+//         }else{
+//             if(response.data.retCode===0){
+//                 console.log('我进入了一次请求')
+//                 //请求成功一次就刷新token,要是超过10分钟没操作就会跳转到loginExpires页面
+//                 getRefreshToken();
+//             }
+//             return response;
+//         }
+//
+//         // getRefreshToken()
+//
+//     },
+//     err => {
+//         console.log('response error:');
+//         console.log(err);
+//         if (err.response) {
+//             switch (err.response.status) {
+//                 case 401:
+//                     console.log('401,超时登录');
+//                     router.replace({
+//                         path: 'loginExpires',
+//                         query: {redirect: router.currentRoute.fullPath}
+//                     });
+//                     store.commit('REMOVE_TOKEN');
+//                     break;
+//                 case 403:
+//                     console.log('403,无权限');
+//                     router.replace({
+//                         path:'Unauthorized',
+//                         query:{redirect:router.currentRoute.fullPath}
+//                     })
+//             }
+//         }
+//         return Promise.reject(err.response);
+//     });
+axios.install = (Vue) => {
+    Vue.prototype.$axios = axios
 };
+
+
+export default axios
+
+
+export function getRefreshToken() {
+    console.log('刷新token')
+    console.log(store.state.token.token.token)
+    console.log(store.state.token.token.token)
+    console.log(store.state.token.token.token)
+    $.get({
+        url:setting.gbs.host+'/auth/token',
+        headers: {'Authorization':'Bearer ' + store.state.token.token.token}
+    }).then(function (res) {
+        console.log('update_token')
+        const tokenList = JSON.parse(res)
+        console.log(tokenList.data.token)
+        store.dispatch('update_token',{token:tokenList.data.token})
+    }).catch(function (err) {
+
+    })
+}

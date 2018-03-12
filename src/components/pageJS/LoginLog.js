@@ -71,8 +71,8 @@ export default {
 
             // 入参
             dateTime: {
-                startTime: this.moment(new Date()).format('YYYY-MM-DD 00:00'),
-                endTime: this.moment((new Date()).getTime() + 3600 * 1000 * 24).format('YYYY-MM-DD 00:00')
+                startTime: this.moment(new Date()).format('YYYY-MM-DD 00:00:00'),
+                endTime: this.moment(new Date()).format('YYYY-MM-DD 23:59:59')
             },
             // 显示
             // showTime: {
@@ -131,18 +131,18 @@ export default {
             const self = this;
             this.$refs[ref].validate((valid)=>{
                 if(valid){
-                    const endTime = self.logSearchForm.endTime;
-                    endTime.setTime(self.logSearchForm.endTime.getTime() + 3600 * 1000 * 24);
+                    // const endTime = self.logSearchForm.endTime;
+                    // endTime.setTime(self.logSearchForm.endTime.getTime() + 3600 * 1000 * 24);
                     const dateTime = {
-                        startTime: this.moment(self.logSearchForm.startTime).format('YYYY-MM-DD 00:00'),
-                        endTime: this.moment(endTime).format('YYYY-MM-DD 00:00'),
+                        startTime: this.moment(self.logSearchForm.startTime).format('YYYY-MM-DD 00:00:00'),
+                        endTime: this.moment(self.logSearchForm.endTime).format('YYYY-MM-DD 23:59:59'),
                     };
                     self.dateSelect.forEach(function (val) {
                         val.active = false
                     });
                     self.Pagination.page = 1;
                     self.getLogData(dateTime);
-                    self.logSearchForm.endTime.setTime(self.logSearchForm.endTime.getTime() - 3600 * 1000 * 24);
+                    // self.logSearchForm.endTime.setTime(self.logSearchForm.endTime.getTime() - 3600 * 1000 * 24);
                 }else {
                     return false
                 }
@@ -155,51 +155,27 @@ export default {
             // 当天
             if(val === 1){
                 const date = new Date();
-                self.dateTime.startTime = this.moment(date).format('YYYY-MM-DD 00:00');
-                date.setTime(date.getTime() + 3600 * 1000 * 24 * val);
-                self.dateTime.endTime = this.moment(date).format('YYYY-MM-DD 00:00');
+                self.dateTime.startTime = this.moment(date).format('YYYY-MM-DD 00:00:00');
+                self.dateTime.endTime = this.moment(date).format('YYYY-MM-DD 23:59:59');
+                self.logSearchForm.startTime = new Date();
             }
             // 昨天
             if(val === 2){
                 const date = new Date();
-                self.dateTime.endTime = this.moment(date).format('YYYY-MM-DD 00:00');
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * (val-1));
-                self.dateTime.startTime = this.moment(date).format('YYYY-MM-DD 00:00');
+                date.setTime(date.getTime() - 3600 * 1000 * 24 );
+                self.logSearchForm.startTime = date;
+                self.logSearchForm.endTime = date;
+                self.dateTime.startTime = this.moment(date).format('YYYY-MM-DD 00:00:00');
+                self.dateTime.endTime = this.moment(date).format('YYYY-MM-DD 23:59:59');
             }
             // 近3天
             if(val === 3){
                 const date = new Date();
-                date.setTime(date.getTime() + 3600 * 1000 * 24);
-                self.dateTime.endTime = this.moment(date).format('YYYY-MM-DD 00:00');
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * val);
-                self.dateTime.startTime = this.moment(date).format('YYYY-MM-DD 00:00');
-
-            }
-        },
-        // 显示设置时间
-        showTime(val){
-            const self = this;
-            // 当天
-            if(val === 1 ){
-                const date = new Date();
                 self.logSearchForm.endTime = new Date();
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * (val-1));
+                self.dateTime.endTime = this.moment(date).format('YYYY-MM-DD 23:59:59');
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 2);
                 self.logSearchForm.startTime = date;
-            }
-            // 昨天
-            if(val === 2){
-                const date = new Date();
-                val = val-1;
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * val);
-                self.logSearchForm.endTime = date;
-                self.logSearchForm.startTime = date;
-            }
-            // 近3天
-            if(val === 3) {
-                const date = new Date();
-                self.logSearchForm.endTime = new Date();
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * (val-1));
-                self.logSearchForm.startTime = date;
+                self.dateTime.startTime = this.moment(date).format('YYYY-MM-DD 00:00:00');
             }
         },
 
@@ -214,13 +190,10 @@ export default {
             });
             if(item.value === '当天'){
                 self.setTime(1);
-                self.showTime(1);
             }else if(item.value === '昨天'){
                 self.setTime(2);
-                self.showTime(2);
             }else if(item.value === '近3天') {
                 self.setTime(3);
-                self.showTime(3);
             }
             console.log('startTime,endTime');
             console.log(self.dateTime.startTime,self.dateTime.endTime);

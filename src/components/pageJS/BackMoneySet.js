@@ -120,13 +120,18 @@ export default {
             ],
             optionsRuleType:[
                 {
+                    value: '',
+                    label:'全部',
+                },
+                {
                     value:1,
                     label:'每手/固定',
                 },
                 {
                     value:2,
                     label:'极差返佣'
-                }],
+                }
+            ],
 
             // 搜索字段
             searchForm: {
@@ -335,13 +340,13 @@ export default {
                         url:'/comsRule/update',
                         data:postData,
                     }).then(function (res) {
-                        if(res.data.retCode===0){
+                        console.log('/comsRule/update',res);
+                        if(res.data.retCode==0){
                             self.$message({
                                 type:'info',
                                 showClose:true,
                                 message:'修改成功'
                             });
-                            self.resetBackMoneyEdit();
                             self.editORSetShow=false;
                             self.searchBackMoneySet();
                             self.loginLoading = false;
@@ -351,7 +356,6 @@ export default {
                                 showClose:true,
                                 message:'修改失败'
                             });
-                            self.resetBackMoneyEdit();
                             self.editORSetShow=false;
                             self.loginLoading = false;
                         }
@@ -362,6 +366,7 @@ export default {
                             message:'网络错误'
                         });
                         self.loginLoading = false;
+                        console.log('/comsRule/update',err)
                     });
                 }else {
                     return false
@@ -381,7 +386,11 @@ export default {
             }).then(function (res) {
                 // console.log(res);
                 if(res.data.retCode==0){
-                    self.symbolTypeList = res.data.data;
+                    self.symbolTypeList.push('全部')
+                    res.data.data.forEach(function (item) {
+                        self.symbolTypeList.push(item)
+                    })
+                    // self.symbolTypeList = res.data.data;
                 }
             }).catch(function (err) {
                 console.log(err);
@@ -395,8 +404,12 @@ export default {
             postData.page = self.searchForm.page.toString();
             postData.pageSize = self.searchForm.pageSize.toString();
             postData.ruleType = self.searchForm.ruleType.toString();
-            postData.symbolType = self.searchForm.symbolType;
-            // console.log(postData);
+            if(self.searchForm.symbolType === '全部'){
+                postData.symbolType = '';
+            }else {
+                postData.symbolType = self.searchForm.symbolType;
+            }
+            console.log('/comsRule/query',postData);
             if(self.$store.state.domain.domain.domain.apId){
                 self.$ajax({
                     method:'post',

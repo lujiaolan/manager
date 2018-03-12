@@ -1,23 +1,37 @@
 /**
  * Created by Udea-Manager on 2017/10/27.
  */
-import emailTemplateSet from '../page/emailTemplateSet.vue';
-import emailInfo from '../page/emailInfo.vue'
+import EmailTemplateSet from '../page/EmailTemplateSet.vue';
 
 export default {
     components:{
-        emailTemplateSet,
-        emailInfo
+        EmailTemplateSet,
     },
     data(){
         return{
+            editableDate:false,
             EmailSet:'first',
             listSearchForm:{
                 searchEmail:'',
                 timeBegin:'',
                 timeEnd:'',
-                emailTittle:''
+                emailTittle:'',
+                emailResult: ''
             },
+            resultOptions:[
+                {
+                    value:'',
+                    label:'全部发送结果'
+                },
+                {
+                    value:'0',
+                    label:'成功'
+                },
+                {
+                    value:'-1',
+                    label:'失败'
+                }
+            ],
             listSearchFormRules: {
                 searchEmail: {
                     required: false,
@@ -90,16 +104,19 @@ export default {
                 }
             };
             if(self.listSearchForm.timeBegin){
-                postData.query.startTime = ((new Date(self.moment(self.listSearchForm.timeBegin).format('YYYY/MM/DD'))).getTime())/1000;
+                postData.query.startTime = this.moment(self.listSearchForm.timeBegin).format('YYYY-MM-DD 00:00:00');
             }
             if(self.listSearchForm.timeEnd){
-                postData.query.endTime = ((new Date(self.moment(self.listSearchForm.timeEnd).format('YYYY/MM/DD'))).getTime())/1000;
+                postData.query.endTime = this.moment(self.listSearchForm.timeEnd).format('YYYY-MM-DD 23:59:59');
             }
             if(self.listSearchForm.searchEmail){
                 postData.query.recipients = self.listSearchForm.searchEmail
             }
             if(self.listSearchForm.emailTittle){
                 postData.query.emailSubject = self.listSearchForm.emailTittle
+            }
+            if(self.listSearchForm.emailResult){
+                postData.query.emailResult = parseInt(self.listSearchForm.emailResult)
             }
             console.log('emailListData postData');
             console.log(postData);
@@ -150,7 +167,7 @@ export default {
         emailListWatch(row){
             const self = this;
             if(row.groupFlag === 0){
-                this.emailDetailUrl = 'http://120.77.55.98:8080/crm/email/record/groupDetail/' + row._id;
+                this.emailDetailUrl = this.$store.state.baseUrl + '/crm/email/record/groupDetail/' + row._id;
             }else {
                 this.emailDetailUrl = this.allEmailDetailUrl + row._id;
             }
@@ -162,12 +179,14 @@ export default {
             this.dialogVisible = false;
         },
         reSendEmail(row){
+            // console.log('/email/reSend',row);
             const self = this;
             const postData = {
                 apId: this.$store.state.domain.domain.domain.apId,
                 emailRecipients: row.emailRecipients,
                 groupFlag: row.groupFlag,
                 emailSubject: row.emailSubject,
+                recordId: row._id
             };
             if(row.groupFlag === -1){
                 postData.emailDataPack = row.emailDataPack;
@@ -177,9 +196,11 @@ export default {
             }
             this.$ajax.post('/email/reSend',postData).then(function (res) {
                 if(res.data.retCode === 0){
-                    self.$message.success('重发邮件成功，请注意查收')
+                    self.$message.success('重发邮件成功，请注意查收');
+                    self.getEmailListData()
                 }else {
-                    self.$message.error('重发邮件失败，请稍微再试')
+                    self.$message.error('重发邮件失败，请稍微再试');
+                    self.getEmailListData()
                 }
             }).catch(function () {
                 self.$message.error('网络错误，请稍微再试')

@@ -1,11 +1,19 @@
 <template>
     <div class="crmAgent">
         <div class="handle-box">
-            <el-input v-model="BankCardAudit.userNameLike" placeholder="姓名/邮箱" class="handle-input mr10"></el-input>
-            <el-select v-model="BankCardAudit.bankCardStatus" placeholder="申请状态" class="handle-select mr10">
-                <el-option v-for="item in bankStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <el-button type="primary" @click="bankCardSearch">查询</el-button>
+            <el-form class="outMoneyMarginR20">
+                <el-form-item>
+                    <el-input v-model="BankCardAudit.userNameLike" placeholder="姓名/邮箱" class="handle-input mr10"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-select v-model="BankCardAudit.bankCardStatus" placeholder="申请状态" class="handle-select mr10">
+                        <el-option v-for="item in bankStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="bankCardSearch">查询</el-button>
+                </el-form-item>
+            </el-form>
         </div>
         <el-table :data="BankCardAuditList" border style="width: 100%" class="grayTable" :rowClassName="refuseRow">
             <el-table-column prop="cardHolder" label="姓名" ></el-table-column>
@@ -35,7 +43,7 @@
                     <span v-if="scope.row.bankCardStatus==2">已拒绝</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="bankReason" label="备注"  width="100"></el-table-column>
+            <el-table-column prop="bankReason" label="备注"  width="120"></el-table-column>
             <el-table-column label="操作" width="150">
                 <template scope="scope">
                     <el-button size="small"

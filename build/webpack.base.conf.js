@@ -31,7 +31,8 @@ module.exports = {
       'assets': resolve('src/assets'),
       'components': resolve('src/components'),
         'utils':resolve('src/utils'),
-        "commMethods":resolve('src/commMethods')
+        "commMethods":resolve('src/commMethods'),
+        'config':resolve('src/config')
     }
   },
   module: {

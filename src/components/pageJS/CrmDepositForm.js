@@ -9,6 +9,7 @@ export default {
     },
     data() {
         return {
+            editableDate:false,
             CRMdeposit_rules:{},
             depositVisible:false,
             depositAddMoney:{
@@ -130,7 +131,7 @@ export default {
                 endTime = this.moment(this.CRMdeposit.endTime).format('YYYY-MM-DD');
             }
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/financial/plus/ap/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url = this.$store.state.baseUrl + '/crm/financial/plus/ap/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&orderNum=' + orderNum + '&status=' + status
                 + '&condition=' + condition
                 + '&startTime=' + startTime  + '&endTime=' + endTime;

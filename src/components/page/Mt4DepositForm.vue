@@ -19,6 +19,7 @@
                     <el-date-picker
                         v-model="MT4deposit.dateValue1"
                         type="date"
+                        :editable="editableDate"
                         placeholder="开始时间">
                     </el-date-picker>
                 </el-form-item>
@@ -26,6 +27,7 @@
                     <el-date-picker
                         v-model="MT4deposit.dateValue2"
                         type="date"
+                        :editable="editableDate"
                         placeholder="结束时间">
                     </el-date-picker>
                 </el-form-item>

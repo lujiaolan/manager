@@ -9,12 +9,16 @@ Vue.use(Vuex);
 import user from './user/';
 import global from './global/';
 import domain from './domain/';
+import drawMoney from './drawMoney/';
+import token from './token/';
 
 const store = new Vuex.Store({
     modules:{
         user,
         global,
-        domain
+        domain,
+        drawMoney,
+        token
     },
     state: {
         curMenu:{
@@ -26,6 +30,8 @@ const store = new Vuex.Store({
             successStatus: true,
             successFlag: false
         },
+        dataAuditTabActive: 'first',
+        baseUrl: 'http://120.77.55.98:8080/crm',
     },
     mutations: {
         SET_CUR_MENU(state,paths){
@@ -36,6 +42,9 @@ const store = new Vuex.Store({
             state.myInfoStatus.myInfoStep = info_status.step;
             state.myInfoStatus.successStatus = info_status.success;
             state.myInfoStatus.successFlag = info_status.sucflag;
+        },
+        UPDATE_TAB_ACTIVE(state,tab){
+            state.dataAuditTabActive = tab
         }
     },
     actions: {
@@ -44,6 +53,9 @@ const store = new Vuex.Store({
         },
         update_info_status({commit},info_status){
             commit('UPDATE_INFO_STATUS',info_status)
+        },
+        update_tab_active({commit},tab){
+            commit('UPDATE_TAB_ACTIVE',tab)
         }
     }
 });

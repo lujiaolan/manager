@@ -10,7 +10,7 @@
                <el-input v-model.number="outMoneyForm.withdrawRealTimeRate" placeholder="实时汇率"
                          @key.native.enter="saveOutMoneySet('outMoneyForm')" disabled=""></el-input>
            </el-form-item>
-           <el-row :gutter="10" v-bind:style="typeOutSelect.resetNumColor">
+           <el-row :gutter="12" v-bind:style="typeOutSelect.resetNumColor">
                <el-col :span="8">
                    <el-form-item label-width="140px">
                        <el-select v-model="outMoneyForm.outMoneyExRateReset.resetType" placeholder="请选择" >
@@ -30,8 +30,8 @@
                                  placeholder="金额" :disabled="realStatusDisabled"></el-input>
                    </el-form-item>
                </el-col>
-               <el-col :span="6">
-                   <el-form-item  prop="withdrawReplaceRate" label="失败时:" label-width="60px">
+               <el-col :span="10">
+                   <el-form-item  prop="withdrawReplaceRate" label="失败时汇率:" label-width="90px">
 
                        <el-input v-model.number="outMoneyForm.withdrawReplaceRate" placeholder="汇率"></el-input>
                    </el-form-item>
@@ -92,5 +92,5 @@
     </el-form>
 </template>
 <script>
-    module.exports  = require('../pageJS/outMoneyForm')
+    module.exports  = require('../pageJS/OutMoneyForm')
 </script>

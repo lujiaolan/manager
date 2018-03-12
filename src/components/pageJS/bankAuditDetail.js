@@ -4,14 +4,16 @@
 export default {
     data(){
         return {
+            // bankUpload: this.$store.state.baseUrl + '/crm/ap/img/upload',
+            bankCardHeadPicUpload: 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardHeadPic'+ new Date().getTime() + '?dir=ap-logo/&contentType=image/jpeg',
+            bankCardTailPicUpload: 'http://120.77.234.9:8080/crm/aider/oss/udeacrm/bankCardTailPic'+ new Date().getTime() + '?dir=ap-logo/&contentType=image/jpeg',
             bankDetailData:{
                 auditTime:'',
-                bankAddress:'',
                 bankBranch:'',
                 bankCardHeadPic:'',
                 bankCardTailPic:'',
                 bankCardNumbers:'',
-                bankCardStatus:'',
+                bankCardStatus:null,
                 bankName:'',
                 bankReason:'',
                 bankCardType:'',
@@ -49,16 +51,17 @@ export default {
                 }
             ],
             bankDetail_rules:{
-                bankReason:[
+                bankCardStatus:[
                     {
-                        // required:false,
-                        // validator:(rules,value,callback)=> {
-                        //     if (value.maxlength > 30) {
-                        //         callback(new Error('限只能输入30个字符,你已超出'))
-                        //     } else {
-                        //         callback()
-                        //     }
-                        // }
+                        required:true,
+                        validator:(rules,value,callback)=> {
+                           if(value==null||value==undefined){
+                               callback(new Error('请选择你审核状态'+value))
+                           }else{
+
+                               callback()
+                           }
+                        }
                     }
                 ],
                 bankCardHeadPic:[
@@ -87,11 +90,12 @@ export default {
     },
     methods:{
         bankDetailSumbit(ref){
+            console.log('this.bankDetailData')
+            console.log(this.bankDetailData)
             const postData = {
                 bankName:this.bankDetailData.bankName,
                 bankCardType:this.bankDetailData.bankCardType,
                 bankBranch:this.bankDetailData.bankBranch,
-                bankAddress:this.bankDetailData.bankAddress,
                 cardHolder:this.bankDetailData.cardHolder,
                 bankCardStatus:this.bankDetailData.bankCardStatus,
                 bankCardHeadPic:this.bankDetailData.bankCardHeadPic,
@@ -102,6 +106,8 @@ export default {
                 bankReason:this.bankDetailData.bankReason,
                 auditTime:this.bankDetailData.auditTime,
             };
+            console.log('this.bankDetailData')
+            console.log(postData)
             const self = this;
             this.$refs[ref].validate((valid)=>{
                 if(valid){
@@ -126,20 +132,26 @@ export default {
                                 if(res.data.retCode==0){
                                     self.$message({
                                         type:'info',
-                                        message:'编辑成功',
+                                        // message:'审核成功',
+                                        message:'邮件发送成功，请注意查收',
                                         showClose:true
                                     });
-                                    self.$router.push('/BankCardAudit');
-                                }else if(res.data.retCode==-1){
+                                    this.$store.dispatch('update_tab_active','three');
+                                    self.$router.push('/DataAudit');
+                                }else if(res.data.retCode==1){
                                     self.$message({
                                         type:'warning',
-                                        message:'银行卡审核步骤成功，但邮件发送步骤失败',
+                                        // message:'银行卡审核步骤成功，但邮件发送步骤失败',
+                                        message:'操作成功，请稍后查收邮件',
                                         showClose:true
                                     });
+                                    this.$store.dispatch('update_tab_active','three');
+                                    self.$router.push('/DataAudit');
                                 }else{
                                     self.$message({
                                         type:'warning',
-                                        message:'银行卡审核步骤已经失败，无后续步骤',
+                                        // message:'银行卡审核步骤已经失败，无后续步骤',
+                                        message:'操作失败，请稍后再试',
                                         showClose:true
                                     });
                                 }
@@ -170,19 +182,22 @@ export default {
             })
         },
         bankRedirectHistory(){
-            this.$router.push('/BankCardAudit')
+            this.$store.dispatch('update_tab_active','three');
+            this.$router.push('/DataAudit')
         },
         handleChangBKDetailHeadPic(files){
             this.bankUrl.imageHeadUrl = files.url;
         },
         handleSuccessBKDetailHeadPic(res,files){
-            this.bankDetailData.bankCardHeadPic = files.response.data.fileName;
+            this.bankUrl.imageHeadUrl = files.url;
+            this.bankDetailData.bankCardHeadPic = res.data;
         },
         handleChangBKDetailTailPic(files){
             this.bankUrl.imageTailUrl = files.url;
         },
         handleSuccessBKDetailTailPic(res,files){
-            this.bankDetailData.bankCardTailPic= files.response.data.fileName;
+            this.bankUrl.imageHeadUrl = files.url;
+            this.bankDetailData.bankCardTailPic= res.data;
         },
     },
     mounted(){

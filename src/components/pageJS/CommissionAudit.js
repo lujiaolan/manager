@@ -1,6 +1,7 @@
 export default {
     data() {
         return {
+            editableDate:false,
             commissionAudit: {
                 tradeAccount: '',
                 commAccount: '',
@@ -69,7 +70,11 @@ export default {
                 ]
             },
 
-            sureText: ''
+            sureText: '',
+
+            transactionDetailVisible: false,
+            transactionId: '',
+            transactionDetailData: [],
         }
     },
     created(){
@@ -89,18 +94,22 @@ export default {
         // 请求列表数据和输入条件时搜索数据
         getCommissionAuditData(){
             let self = this;
-            var postData = {};
+            const postData = {};
             postData.apId = self.$store.state.domain.domain.domain.apId;
             postData.page = self.comAuditPaginationData.page.toString();
             postData.pageSize = self.comAuditPaginationData.pageSize.toString();
-            if(self.commissionAudit.select_status === 0){
+            if(self.commissionAudit.select_status == 0){
                 postData.status = '';
             }else {
                 postData.status = self.commissionAudit.select_status;
             }
-            postData.sort = self.orderValue;
-            postData.tradeAccount = self.commissionAudit.tradeAccount.trim();
-            postData.commAccount = self.commissionAudit.commAccount.trim();
+            // postData.sort = self.orderValue;
+            // if(self.commissionAudit.tradeAccount){
+            //     postData.condition = self.commissionAudit.tradeAccount.trim();
+            // }
+            if(self.commissionAudit.commAccount){
+                postData.condition = self.commissionAudit.commAccount.trim();
+            }
             if(self.commissionAudit.dateValue1 === ''&&self.commissionAudit.dateValue2 === ''){
                 postData.startTime = '';
                 postData.endTime = '';
@@ -112,7 +121,8 @@ export default {
             self.$ajax({
                 method:'post',
                 data:postData,
-                url:'/commission/apComplete'
+                // url:'/commission/apComplete'
+                url:'/commission/sum/apAll'
             }).then(function (res) {
                 console.log(res);
                 if (res.data.retCode === 0) {
@@ -164,7 +174,7 @@ export default {
             }
             // console.log('/financial/withdraw/ap/export postData');
             // TODO 导出下载地址上传的时候记得改
-            const url = 'http://120.77.55.98:8080/crm/commission/apComplete/export?apId=' + this.$store.state.domain.domain.domain.apId
+            const url = this.$store.state.baseUrl + '/crm/commission/apComplete/export?apId=' + this.$store.state.domain.domain.domain.apId
                 + '&sort=' + this.orderValue
                 + '&tradeAccount=' + this.commissionAudit.tradeAccount.trim()
                 + '&commAccount=' + this.commissionAudit.commAccount.trim()
@@ -176,11 +186,13 @@ export default {
 
         // 审核按钮
         ComAudit(index){
+            this.sureText = '审核';
             this.indexEdit = index;
             this.comAuditStatus = 0;
         },
         // 拒绝按钮
         ComRefuse(index){
+            this.sureText = '拒绝';
             this.indexEdit = index;
             this.comAuditStatus = 1;
         },
@@ -193,18 +205,18 @@ export default {
         ComAuditConfirm(row){
             var self = this;
             var postData = {};
-            postData.commId = row._id;
+            postData.commSumId = row._id;
             postData.comment = row.comment;
             console.log('/commission/apCheck res');
             // console.log(self.$store.state.user.userinfo._id);
             if(self.comAuditStatus == 0){
-                this.sureText = '审核';
+                // this.sureText = '审核';
                 postData.userId = row.userId;
                 console.log(postData);
                 self.$ajax({
                     method: 'post',
                     data:postData,
-                    url: '/commission/apCheck'
+                    url: '/commission/sum/apCheck'
                 }).then(function (res) {
                     console.log(res);
                     if(res.data.retCode == 0){
@@ -229,7 +241,7 @@ export default {
                     })
                 });
             }else {
-                this.sureText = '拒绝';
+                // this.sureText = '拒绝';
                 self.$ajax({
                     method: 'post',
                     data:postData,
@@ -260,8 +272,6 @@ export default {
             }
             self.indexEdit = '';
         },
-
-
         refuseRow(row){
             // console.log('refuseRow row');
             // console.log(row)
@@ -270,6 +280,35 @@ export default {
             }else {
                 return ''
             }
+        },
+
+
+        // 显示详情弹框
+        showTransactionDetail(row){
+            const self = this;
+            this.transactionDetailVisible = true;
+            console.log(row._id);
+            this.transactionId = row._id;
+            const postData = {
+                commSumId: row._id
+            };
+            this.$ajax({
+                method: 'post',
+                data: postData,
+                url: '/commission/sum/subAll'
+            }).then(function (res) {
+                console.log(res);
+                if(res.data.retCode === 0){
+                    self.transactionDetailData = res.data.data;
+                }else {
+                    self.$message({
+                        type: 'error',
+                        message: res.data.data.errMsg
+                    })
+                }
+            }).catch(function () {
+
+            })
         }
     }
 }
